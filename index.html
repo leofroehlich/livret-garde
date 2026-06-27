@@ -59,12 +59,8 @@
   .score-result{background:var(--navy-light);border-radius:8px;padding:14px;margin-top:12px;text-align:center;}
   .score-result .score-num{font-size:42px;font-weight:700;color:var(--accent);font-family:var(--font-mono);line-height:1;}
   .score-result .score-interp{font-size:13px;color:var(--text-dim);margin-top:4px;}
-  .check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(30,51,83,0.5);cursor:pointer;}
   .check-item:last-child{border-bottom:none;}
   .check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);margin-top:1px;cursor:pointer;}
-  .check-item.done span{text-decoration:line-through;color:var(--text-muted);}
-  .progress-bar{height:6px;background:var(--navy-light);border-radius:3px;overflow:hidden;margin-bottom:14px;}
-  .progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s;}
   .algo-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
   .step-num{width:26px;height:26px;background:var(--accent);color:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
   .step-content{flex:1;}
@@ -77,7 +73,6 @@
   .contact-role{font-size:11px;color:var(--text-dim);margin-top:1px;}
   .contact-num{font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--accent);cursor:pointer;border-radius:4px;padding:2px 6px;}
   .contact-num:hover{background:rgba(0,180,216,0.1);}
-  #notes-area{width:100%;min-height:300px;background:var(--navy-light);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;line-height:1.7;padding:16px;resize:vertical;outline:none;font-family:inherit;}
   .highlight{background:rgba(0,180,216,0.3);border-radius:2px;}
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;}
   .modal-bg.open{display:flex;}
@@ -133,7 +128,6 @@
   body.mobile-mode .btn,body.mobile-mode .btn-ghost{font-size:11px;padding:6px 10px;}
   body.mobile-mode .score-result .score-num{font-size:32px;}
   body.mobile-mode .contact-card{padding:10px 12px;}
-  body.mobile-mode #notes-area{min-height:200px;font-size:13px;}
   body.mobile-mode .badge{font-size:10px;padding:2px 6px;}
   @media(max-width:700px){
     body:not(.desktop-forced){display:block!important;height:auto!important;overflow:auto!important;}
@@ -171,6 +165,8 @@
     <button onclick="goTo('ett',this,true)"><span class="nav-icon">🔊</span> ETT</button>
     <button onclick="goTo('raac',this,true)"><span class="nav-icon">🏃</span> RAAC</button>
     <button onclick="goTo('consult',this,true)"><span class="nav-icon">📋</span> Consultation</button>
+    <button onclick="goTo('hemostase',this,true)"><span class="nav-icon">🩸</span> Hémostase</button>
+    <button onclick="goTo('traitements',this,true)"><span class="nav-icon">💉</span> Traitements péri-op</button>
   </nav>
   <div class="mob-footer">v1.0 · Données indicatives · Vérifier le Vidal</div>
 </div>
@@ -197,6 +193,8 @@
     <button onclick="goTo('ett',this)"><span class="nav-icon">🔊</span> ETT</button>
     <button onclick="goTo('raac',this)"><span class="nav-icon">🏃</span> RAAC</button>
     <button onclick="goTo('consult',this)"><span class="nav-icon">📋</span> Consultation</button>
+    <button onclick="goTo('hemostase',this)"><span class="nav-icon">🩸</span> Hémostase</button>
+    <button onclick="goTo('traitements',this)"><span class="nav-icon">💉</span> Traitements péri-op</button>
   </nav>
   <div class="sidebar-footer">v1.0 · Données indicatives<br>Vérifier toujours le Vidal</div>
 </aside>
@@ -442,607 +440,232 @@
   <div style="margin-top:16px;"><button class="btn-ghost" onclick="openModal('contact')">+ Ajouter un contact</button></div>
 </div>
 
-<!-- CHECKLIST -->
-    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-    <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;" id="prog-label">0 / 0 tâches complétées</div>
-    <div id="checklist-items">
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Récupération des transmissions orales</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Vérification de l'état des patients en réa</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Contrôle des voies d'abord (VVC, artérielle, VVP)</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Vérification des alarmes moniteurs</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Chariot d'urgence + défibrillateur vérifiés</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Inventaire médicaments première urgence</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Respirateur vérifié (tests automatiques)</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Matériel intubation difficile prêt</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Numéros de garde enregistrés</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Bilans biologiques urgents vérifiés</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Constantes documentées dans le dossier patient</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>Retour équipe infirmière informée</span></div>
-    </div>
-    <div style="margin-top:14px;display:flex;gap:10px;">
-      <button class="btn-ghost" onclick="openModal('checklist')">+ Ajouter une tâche</button>
-      <button class="btn-ghost" onclick="resetChecklist()">🔄 Réinitialiser</button>
-    </div>
-  </div>
-</div>
-
-    <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">Sauvegardées automatiquement dans le navigateur</div>
-    <textarea id="notes-area" placeholder="Notez ici les événements de la garde, les transmissions importantes..."></textarea>
-    <div style="display:flex;gap:10px;margin-top:12px;">
-      <button class="btn" onclick="printNotes()">🖨️ Imprimer</button>
-      <button class="btn-ghost" onclick="clearNotes()">🗑️ Effacer</button>
-    </div>
-  </div>
-</div>
-
 <!-- SPECTRE ABX -->
 <div id="section-spectreabx" class="section">
-  <div class="urgency-banner" style="background:rgba(0,180,216,0.08);border-color:rgba(0,180,216,0.3);">🧬 <strong>Spectre des principaux antibiotiques</strong> · ✅ Actif · ⚠️ Partiel/variable · ❌ Inactif/résistance fréquente · Données indicatives — adapter à l'écologie locale et antibiogramme</div>
+  <div class="urgency-banner" style="background:rgba(0,180,216,0.08);border-color:rgba(0,180,216,0.3);">🧬 <strong>Spectre des principaux antibiotiques</strong> · ✅ Actif · ⚠️ Partiel/variable · ❌ Inactif · Données indicatives — adapter à l'écologie locale et l'antibiogramme</div>
 
-  <!-- LÉGENDE -->
   <div class="card" style="margin-bottom:14px;">
     <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;">
       <span style="font-weight:700;color:var(--text-dim);">LÉGENDE :</span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:28px;height:20px;background:rgba(82,183,136,0.7);border-radius:4px;"></span><strong>Actif</strong></span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:28px;height:20px;background:rgba(244,162,97,0.6);border-radius:4px;"></span><strong>Partiel / variable</strong></span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:28px;height:20px;background:rgba(230,57,70,0.15);border-radius:4px;border:1px solid rgba(230,57,70,0.3);"></span><strong>Inactif</strong></span>
-      <span style="margin-left:auto;font-size:11px;color:var(--text-muted);">SASM = Staphylocoque sensible méticilline · MRSA = méticillo-résistant · BGN = bacille Gram négatif</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--text-muted);">SASM = S. aureus sensible méticilline · MRSA = méticillo-résistant · BGN = bacille Gram négatif</span>
     </div>
   </div>
 
 <style>
-.abx-table { width:100%; border-collapse:collapse; font-size:11px; }
-.abx-table th { padding:6px 8px; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); border-bottom:2px solid var(--border); white-space:nowrap; font-weight:700; }
-.abx-table td { padding:5px 8px; border-bottom:1px solid rgba(30,51,83,0.4); vertical-align:middle; white-space:nowrap; }
-.abx-table tr:hover td { background:var(--card-hover); }
-.abx-name { font-weight:700; color:var(--text); font-size:11px; }
-.abx-class { font-size:10px; color:var(--text-muted); }
-.abx-active { background:rgba(82,183,136,0.25); border-radius:3px; padding:2px 6px; color:var(--success); font-weight:700; text-align:center; }
-.abx-partial { background:rgba(244,162,97,0.2); border-radius:3px; padding:2px 6px; color:var(--warn); font-weight:700; text-align:center; }
-.abx-none { background:rgba(230,57,70,0.07); border-radius:3px; padding:2px 4px; color:var(--text-muted); text-align:center; font-size:10px; }
-.abx-section-header { background:var(--navy-light); color:var(--accent); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:8px 10px; }
-.abx-group-label { writing-mode:initial; font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; }
+.abx-table{width:100%;border-collapse:collapse;font-size:11px;}
+.abx-table th{padding:6px 8px;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);border-bottom:2px solid var(--border);white-space:nowrap;font-weight:700;}
+.abx-table td{padding:5px 8px;border-bottom:1px solid rgba(30,51,83,0.4);vertical-align:middle;white-space:nowrap;}
+.abx-table tr:hover td{background:var(--card-hover);}
+.abx-name{font-weight:700;color:var(--text);font-size:11px;}
+.abx-cls{font-size:10px;color:var(--text-muted);}
+.abx-active{background:rgba(82,183,136,0.25);border-radius:3px;padding:2px 6px;color:var(--success);font-weight:700;text-align:center;display:inline-block;}
+.abx-partial{background:rgba(244,162,97,0.2);border-radius:3px;padding:2px 6px;color:var(--warn);font-weight:700;text-align:center;display:inline-block;}
+.abx-none{background:rgba(230,57,70,0.07);border-radius:3px;padding:2px 4px;color:var(--text-muted);text-align:center;font-size:10px;display:inline-block;}
+.abx-sep{background:var(--navy-light);color:var(--accent);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:8px 10px;}
 </style>
 
-  <!-- TABLEAU PRINCIPAL -->
   <div class="card" style="overflow-x:auto;">
-    <div class="card-title">🦠 Tableau de couverture — Gram positifs & négatifs</div>
+    <div class="card-title">🦠 Tableau de couverture antibiotique</div>
     <table class="abx-table">
       <thead>
         <tr>
           <th style="min-width:140px;">Antibiotique</th>
-          <th style="min-width:90px;">Classe</th>
-          <!-- GRAM + -->
-          <th colspan="5" style="text-align:center;border-left:2px solid var(--accent);color:var(--accent);">── COCCI GRAM POSITIFS ──</th>
-          <!-- GRAM - -->
+          <th>Classe</th>
+          <th colspan="5" style="text-align:center;border-left:2px solid var(--accent);color:var(--accent);">── GRAM POSITIFS ──</th>
           <th colspan="6" style="text-align:center;border-left:2px solid var(--warn);color:var(--warn);">── BACILLES GRAM NÉGATIFS ──</th>
-          <!-- ANAÉROBIES -->
-          <th colspan="2" style="text-align:center;border-left:2px solid var(--success);color:var(--success);">── ANAÉR. ──</th>
-          <!-- ATYPIQUES -->
-          <th colspan="2" style="text-align:center;border-left:2px solid #b48ead;color:#b48ead;">─ ATYPIQUES ─</th>
+          <th colspan="2" style="text-align:center;border-left:2px solid var(--success);color:var(--success);">ANAÉR.</th>
+          <th colspan="2" style="text-align:center;border-left:2px solid #b48ead;color:#b48ead;">ATYPIQUES</th>
         </tr>
         <tr>
           <th></th><th></th>
-          <th style="border-left:2px solid var(--accent);">SASM</th>
-          <th>MRSA</th>
-          <th>SCN</th>
-          <th>Strepto</th>
-          <th>Entérocoque</th>
-          <th style="border-left:2px solid var(--warn);">E. coli</th>
-          <th>Klebsiella</th>
-          <th>Pseudo-monas</th>
-          <th>Acineto-bacter</th>
-          <th>H. influ.</th>
-          <th>Entéro-bactéries</th>
-          <th style="border-left:2px solid var(--success);">Clostri-dium</th>
-          <th>Bacteroïdes</th>
-          <th style="border-left:2px solid #b48ead;">Légionelle</th>
-          <th>Myco-plasme</th>
+          <th style="border-left:2px solid var(--accent);">SASM</th><th>MRSA</th><th>SCN</th><th>Strepto</th><th>Entérocoque</th>
+          <th style="border-left:2px solid var(--warn);">E. coli</th><th>Klebsiella</th><th>Pseudomonas</th><th>Acinetobacter</th><th>H. influenzae</th><th>Entérobact.</th>
+          <th style="border-left:2px solid var(--success);">Clostridium</th><th>Bacteroïdes</th>
+          <th style="border-left:2px solid #b48ead;">Légionelle</th><th>Mycoplasme</th>
         </tr>
       </thead>
       <tbody>
-        <!-- ═══ PÉNICILLINES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">🔵 PÉNICILLINES</td></tr>
+        <tr><td colspan="18" class="abx-sep">🔵 PÉNICILLINES</td></tr>
         <tr>
-          <td><div class="abx-name">Amoxicilline</div><div class="abx-class">A-moxicilline</div></td>
-          <td class="abx-class">Péni A</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Amoxicilline</div></td><td class="abx-cls">Péni A</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Amox-Clav</div><div class="abx-class">Augmentin®</div></td>
-          <td class="abx-class">Péni A + IBL</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Amox-Clav</div><div class="abx-cls">Augmentin®</div></td><td class="abx-cls">Péni A+IBL</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Pipéracilline-Tazobactam</div><div class="abx-class">Tazocin®</div></td>
-          <td class="abx-class">Péni A + IBL</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Pipéracilline-Tazo</div><div class="abx-cls">Tazocin®</div></td><td class="abx-cls">Péni A+IBL</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
-        <!-- ═══ CÉPHALOSPORINES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">🟢 CÉPHALOSPORINES</td></tr>
+        <tr><td colspan="18" class="abx-sep">🟢 CÉPHALOSPORINES</td></tr>
         <tr>
-          <td><div class="abx-name">Céfazoline</div><div class="abx-class">C1G</div></td>
-          <td class="abx-class">C1G</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Céfazoline</div><div class="abx-cls">C1G</div></td><td class="abx-cls">C1G</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Céfuroxime</div><div class="abx-class">Zinnat® / C2G</div></td>
-          <td class="abx-class">C2G</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Céfuroxime</div><div class="abx-cls">C2G</div></td><td class="abx-cls">C2G</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Céfotaxime</div><div class="abx-class">Claforan® / C3G</div></td>
-          <td class="abx-class">C3G</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Ceftriaxone</div><div class="abx-cls">Rocéphine® / C3G</div></td><td class="abx-cls">C3G</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Ceftriaxone</div><div class="abx-class">Rocéphine® / C3G</div></td>
-          <td class="abx-class">C3G</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Ceftazidime</div><div class="abx-cls">Fortum® / C3G anti-Pyo</div></td><td class="abx-cls">C3G anti-Pyo</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Ceftazidime</div><div class="abx-class">Fortum® / C3G anti-Pyo</div></td>
-          <td class="abx-class">C3G anti-Pyo</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Céfépime</div><div class="abx-cls">C4G anti-Pyo</div></td><td class="abx-cls">C4G</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+        </tr>
+        <tr><td colspan="18" class="abx-sep">🔴 CARBAPÉNÈMES — Réservés / dernier recours</td></tr>
+        <tr>
+          <td><div class="abx-name">Imipénème</div><div class="abx-cls">Tienam®</div></td><td class="abx-cls">Carbapénème</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Céfépime</div><div class="abx-class">C4G anti-Pyo</div></td>
-          <td class="abx-class">C4G</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Méropénème</div><div class="abx-cls">Méronem®</div></td><td class="abx-cls">Carbapénème</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
-        <!-- ═══ CARBAPÉNÈMES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">🔴 CARBAPÉNÈMES — Réservés · Antibiotiques de dernier recours</td></tr>
+        <tr><td colspan="18" class="abx-sep">🟣 GLYCOPEPTIDES — Anti-Gram+ exclusifs (MRSA)</td></tr>
         <tr>
-          <td><div class="abx-name">Imipénème</div><div class="abx-class">Tienam® / Carba</div></td>
-          <td class="abx-class">Carbapénème</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Vancomycine</div></td><td class="abx-cls">Glycopeptide</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Méropénème</div><div class="abx-class">Méronem® / Carba</div></td>
-          <td class="abx-class">Carbapénème</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Teicoplanine</div><div class="abx-cls">Targocid®</div></td><td class="abx-cls">Glycopeptide</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
-        <!-- ═══ GLYCOPEPTIDES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">🟣 GLYCOPEPTIDES — Anti-Gram+ exclusifs (MRSA, MRSE, Entérocoque)</td></tr>
+        <tr><td colspan="18" class="abx-sep">🟡 AMINOSIDES — Dose unique journalière · Synergie BGN</td></tr>
         <tr>
-          <td><div class="abx-name">Vancomycine</div><div class="abx-class">Vancocin®</div></td>
-          <td class="abx-class">Glycopeptide</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Gentamicine</div><div class="abx-cls">Gentalline®</div></td><td class="abx-cls">Aminoside</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Teicoplanine</div><div class="abx-class">Targocid®</div></td>
-          <td class="abx-class">Glycopeptide</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Amikacine</div><div class="abx-cls">Amiklin®</div></td><td class="abx-cls">Aminoside</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
-        <!-- ═══ AMINOSIDES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">🟡 AMINOSIDES — Synergie avec β-lactamines · Dose unique journalière</td></tr>
+        <tr><td colspan="18" class="abx-sep">🟠 FLUOROQUINOLONES — Large spectre · Bonne diffusion tissulaire</td></tr>
         <tr>
-          <td><div class="abx-name">Gentamicine</div><div class="abx-class">Gentalline®</div></td>
-          <td class="abx-class">Aminoside</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Ciprofloxacine</div><div class="abx-cls">Ciflox®</div></td><td class="abx-cls">FQ anti-BGN</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Amikacine</div><div class="abx-class">Amiklin®</div></td>
-          <td class="abx-class">Aminoside</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Lévofloxacine</div><div class="abx-cls">Tavanic®</div></td><td class="abx-cls">FQ respiratoire</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
         </tr>
-        <!-- ═══ FLUOROQUINOLONES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">🟠 FLUOROQUINOLONES — Large spectre · Bonne diffusion tissulaire</td></tr>
+        <tr><td colspan="18" class="abx-sep">⚪ MACROLIDES · NITROIMIDAZOLÉS · AUTRES</td></tr>
         <tr>
-          <td><div class="abx-name">Ciprofloxacine</div><div class="abx-class">Ciflox® / Quinolone</div></td>
-          <td class="abx-class">FQ anti-BGN</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
+          <td><div class="abx-name">Azithromycine</div><div class="abx-cls">Zithromax®</div></td><td class="abx-cls">Macrolide</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Lévofloxacine</div><div class="abx-class">Tavanic® / Quinolone</div></td>
-          <td class="abx-class">FQ respiratoire</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-        </tr>
-        <!-- ═══ MACROLIDES / NITROIMIDAZOLÉS / AUTRES ═══ -->
-        <tr><td colspan="18" class="abx-section-header">⚪ MACROLIDES · NITROIMIDAZOLÉS · AUTRES</td></tr>
-        <tr>
-          <td><div class="abx-name">Azithromycine</div><div class="abx-class">Zithromax®</div></td>
-          <td class="abx-class">Macrolide</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
+          <td><div class="abx-name">Métronidazole</div><div class="abx-cls">Flagyl®</div></td><td class="abx-cls">Nitroimidazolé</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Métronidazole</div><div class="abx-class">Flagyl®</div></td>
-          <td class="abx-class">Nitroimidazolé</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Linézolide</div><div class="abx-cls">Zyvoxid®</div></td><td class="abx-cls">Oxazolidinone</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-partial">⚠️</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
         <tr>
-          <td><div class="abx-name">Cotrimoxazole</div><div class="abx-class">Bactrim®</div></td>
-          <td class="abx-class">Sulfamide</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-        </tr>
-        <tr>
-          <td><div class="abx-name">Linézolide</div><div class="abx-class">Zyvoxid® / Oxazolidinone</div></td>
-          <td class="abx-class">Oxazolidinone</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-        </tr>
-        <tr>
-          <td><div class="abx-name">Daptomycine</div><div class="abx-class">Cubicin® / Lipopeptide</div></td>
-          <td class="abx-class">Lipopeptide</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-        </tr>
-        <tr>
-          <td><div class="abx-name">Colistine</div><div class="abx-class">Colomycin® / Polymyxine</div></td>
-          <td class="abx-class">Polymyxine</td>
-          <td style="border-left:2px solid var(--accent);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-active">✅</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td><span class="abx-partial">⚠️</span></td>
-          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
-          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td>
-          <td><span class="abx-none">❌</span></td>
+          <td><div class="abx-name">Colistine</div><div class="abx-cls">Colomycin® — last resort</div></td><td class="abx-cls">Polymyxine</td>
+          <td style="border-left:2px solid var(--accent);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid var(--warn);"><span class="abx-partial">⚠️</span></td><td><span class="abx-partial">⚠️</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-active">✅</span></td><td><span class="abx-none">❌</span></td><td><span class="abx-partial">⚠️</span></td>
+          <td style="border-left:2px solid var(--success);"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
+          <td style="border-left:2px solid #b48ead;"><span class="abx-none">❌</span></td><td><span class="abx-none">❌</span></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- ENCADRÉS PRATIQUES -->
   <div class="grid2">
     <div class="card">
       <div class="card-title">🎯 Associations ABX fréquentes en Réa</div>
       <table>
-        <tr><th>Situation</th><th>Association</th><th>Justification</th></tr>
-        <tr><td>Choc septique communautaire</td><td class="drug-dose">Pipé-Tazo + Amikacine (48–72h)</td><td>Large spectre + synergie BGN</td></tr>
-        <tr><td>Pneumopathie communautaire grave</td><td class="drug-dose">C3G + Macrolide ou FQ respiratoire</td><td>Couvre atypiques</td></tr>
-        <tr><td>Infection abdominale grave</td><td class="drug-dose">Pipé-Tazo (ou C3G + Métronidazole)</td><td>Anaérobies + BGN</td></tr>
-        <tr><td>Infection sur cathéter / bactériémie</td><td class="drug-dose">Vancomycine ± C3G</td><td>MRSA + BGN</td></tr>
-        <tr><td>PAVM / BMR suspectée</td><td class="drug-dose">Pipé-Tazo ou Ceftazidime + Amikacine + Vancomycine</td><td>Triple spectre élargi</td></tr>
-        <tr><td>Neutropénie fébrile</td><td class="drug-dose">Pipé-Tazo ou Céfépime + Amikacine</td><td>Empirique large anti-Pyo</td></tr>
-        <tr><td>Méningite bactérienne</td><td class="drug-dose">C3G (Céfotaxime 300 mg/kg/j) + Dexaméthasone</td><td>SNC pénétration</td></tr>
-        <tr><td>Endocardite SASM</td><td class="drug-dose">Cloxacilline + Gentamicine (48h synergie)</td><td>Bactéricidie</td></tr>
+        <tr><th>Situation</th><th>Association</th></tr>
+        <tr><td>Choc septique communautaire</td><td class="drug-dose">Pipé-Tazo + Amikacine (48–72h)</td></tr>
+        <tr><td>Pneumopathie communautaire grave</td><td class="drug-dose">C3G + Macrolide ou FQ respiratoire</td></tr>
+        <tr><td>Infection abdominale grave</td><td class="drug-dose">Pipé-Tazo (ou C3G + Métronidazole)</td></tr>
+        <tr><td>Infection sur cathéter</td><td class="drug-dose">Vancomycine ± C3G</td></tr>
+        <tr><td>PAVM / BMR suspectée</td><td class="drug-dose">Pipé-Tazo + Amikacine + Vancomycine</td></tr>
+        <tr><td>Neutropénie fébrile</td><td class="drug-dose">Pipé-Tazo ou Céfépime + Amikacine</td></tr>
+        <tr><td>Méningite bactérienne</td><td class="drug-dose">Céfotaxime 300 mg/kg/j + Dexaméthasone</td></tr>
+        <tr><td>Endocardite SASM</td><td class="drug-dose">Cloxacilline + Gentamicine (48h)</td></tr>
       </table>
     </div>
     <div class="card">
-      <div class="card-title">⚠️ Points de vigilance antibiotiques en réanimation</div>
+      <div class="card-title">⚠️ Points de vigilance</div>
       <table>
         <tr><th>Molécule</th><th>Précaution clé</th></tr>
-        <tr><td>Vancomycine</td><td>TDM : trough 15–20 mg/L ou AUC/MIC 400–600 · néphrotoxicité si associée aux aminosides</td></tr>
-        <tr><td>Aminosides</td><td>Dose unique journalière · TDM pic (1h) ≥ 30 mg/L amikacine · IRC → réduire fréquence · ototoxicité</td></tr>
-        <tr><td>Carbapénèmes</td><td>Réservés aux BGN résistants · Préserver écologie · Risque entérocoques et Candida si large spectre</td></tr>
-        <tr><td>Linézolide</td><td>Max 14 jours · Thrombopénie · Interaction ISRS (syndrome sérotoninergique)</td></tr>
-        <tr><td>Colistine</td><td>Last resort · Néphrotoxicité majeure · TDM impératif · Ne jamais en monothérapie</td></tr>
-        <tr><td>Fluoroquinolones</td><td>Allongement QT · Tendinopathie · Résistances croissantes · Éviter si alternatives</td></tr>
-        <tr><td>Pipé-Tazo</td><td>Néphrotoxicité si associé à vancomycine · Ajuster en IRC · Perfusion étendue 4h si CMI élevée</td></tr>
-        <tr><td>Métronidazole</td><td>Interaction AVK (potentialisation) · Neurotoxicité si long cours</td></tr>
+        <tr><td>Vancomycine</td><td>AUC/MIC 400–600 · Néphrotoxicité si aminosides associés</td></tr>
+        <tr><td>Aminosides</td><td>Dose unique journalière · Pic &gt;30 mg/L (amikacine) · Ototoxicité</td></tr>
+        <tr><td>Carbapénèmes</td><td>Réservés BGN résistants · Préserver écologie</td></tr>
+        <tr><td>Linézolide</td><td>Max 14j · Thrombopénie · Interaction ISRS (syndrome sérotoninergique)</td></tr>
+        <tr><td>Colistine</td><td>Last resort · Néphrotoxicité majeure · Jamais en monothérapie</td></tr>
+        <tr><td>Pipé-Tazo</td><td>Néphrotoxicité + vancomycine · Perfusion étendue 4h si CMI élevée</td></tr>
+        <tr><td>FQ</td><td>Allongement QT · Tendinopathies · Résistances croissantes</td></tr>
       </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🔬 Mécanismes de résistance — Rappels clés</div>
-    <div class="grid3">
-      <div>
-        <div style="font-size:11px;color:var(--danger);font-weight:700;margin-bottom:8px;">🔴 MRSA / MRSE</div>
-        <div class="drug-note">Méticilline-résistance = résistance à toutes les β-lactamines (sauf nouvelles céphalosporines anti-MRSA). Traitement : Vancomycine ou Daptomycine ou Linézolide selon site infectieux.</div>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--warn);font-weight:700;margin-bottom:8px;">🟡 BLSE (β-lactamases à spectre étendu)</div>
-        <div class="drug-note">Résistance à toutes les C1G/C2G/C3G. Traitement : Carbapénème en cas d'infection grave. Entérobactéries productrices (E. coli, Klebsiella) → signalement BMR.</div>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--danger);font-weight:700;margin-bottom:8px;">🔴 EPC (Entérobactéries productrices de Carbapénèmases)</div>
-        <div class="drug-note">Résistance à tous les carbapénèmes. Options très limitées : Colistine + Amikacine + Fosfomycine en combinaison. Isolement contact strict. Déclaration obligatoire.</div>
-      </div>
     </div>
   </div>
 </div>
@@ -2787,6 +2410,412 @@
 
 </div><!-- /section-raac -->
 
+<!-- HÉMOSTASE -->
+<div id="section-hemostase" class="section">
+  <div class="urgency-banner" style="background:rgba(230,57,70,0.08);border-color:rgba(230,57,70,0.3);color:var(--danger);">🩸 <strong>Hémostase péri-opératoire</strong> · GIHP/SFAR RFE 2024 · Données indicatives — adapter au dossier patient</div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+    <button class="btn" onclick="showHemoTab('aod',this)">💊 AOD</button>
+    <button class="btn-ghost" onclick="showHemoTab('avk',this)">🟡 AVK</button>
+    <button class="btn-ghost" onclick="showHemoTab('hbpm',this)">💉 HBPM/HNF</button>
+    <button class="btn-ghost" onclick="showHemoTab('antiplaq',this)">🔴 Antiplaquettaires</button>
+    <button class="btn-ghost" onclick="showHemoTab('urgence',this)">🚨 Urgence hémorragique</button>
+    <button class="btn-ghost" onclick="showHemoTab('transfusion',this)">🩸 Transfusion</button>
+  </div>
+
+  <!-- AOD -->
+  <div id="hemo-aod" class="hemo-panel">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">💊 Délais d'arrêt AOD avant chirurgie (GIHP/SFAR 2024)</div>
+        <div class="info-box">Le délai dépend du <strong>risque hémorragique chirurgical</strong> et de la <strong>fonction rénale</strong> (DFG). Dernière prise = J0.</div>
+        <table>
+          <tr><th>Molécule</th><th>Risque faible</th><th>Risque élevé</th><th>CI rénale</th></tr>
+          <tr><td><strong>Dabigatran</strong><div class="abx-class">Pradaxa®</div></td><td class="drug-dose">48h (DFG≥50)<br>72h (DFG 30–50)</td><td class="drug-dose">72h (DFG≥50)<br>96h (DFG 30–50)</td><td>DFG &lt;30 → CI</td></tr>
+          <tr><td><strong>Rivaroxaban</strong><div class="abx-class">Xarelto®</div></td><td class="drug-dose">24h (DFG≥30)</td><td class="drug-dose">48h (DFG≥30)</td><td>DFG &lt;15 → CI</td></tr>
+          <tr><td><strong>Apixaban</strong><div class="abx-class">Eliquis®</div></td><td class="drug-dose">24h (DFG≥25)</td><td class="drug-dose">48h (DFG≥25)</td><td>DFG &lt;15 → CI</td></tr>
+          <tr><td><strong>Edoxaban</strong><div class="abx-class">Lixiana®</div></td><td class="drug-dose">24h (DFG≥30)</td><td class="drug-dose">48h (DFG≥30)</td><td>DFG &lt;15 → CI</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">⚠️ Pas de relais héparinique systématique pour les AOD — inutile et dangereux sauf exception (valve mécanique, SAPL avec thromboses)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚡ Reprise AOD après chirurgie</div>
+        <table>
+          <tr><th>Risque hémorragique post-op</th><th>Reprise AOD</th></tr>
+          <tr><td><span class="badge badge-green">Faible</span> (chirurgie mineure, dentaire, cataracte)</td><td class="drug-dose">6–8h post-op à dose pleine</td></tr>
+          <tr><td><span class="badge badge-warn">Modéré</span> (chirurgie orthopédique, abdominale)</td><td class="drug-dose">24–48h post-op · demi-dose si possible J1 puis pleine dose J2</td></tr>
+          <tr><td><span class="badge badge-danger">Élevé</span> (neurochirurgie, chirurgie cardiaque, vasculaire)</td><td class="drug-dose">48–72h post-op · HBPM prophylactique en attente</td></tr>
+        </table>
+        <div style="margin-top:14px;">
+          <div class="card-title" style="margin-bottom:10px;">🔄 Antidotes AOD</div>
+          <table>
+            <tr><th>AOD</th><th>Antidote</th><th>Dose</th></tr>
+            <tr><td>Dabigatran</td><td><strong>Idarucizumab (Praxbind®)</strong></td><td class="drug-dose">5 g IV (2 × 2,5 g) en 5–10 min</td></tr>
+            <tr><td>Rivaroxaban / Apixaban / Edoxaban</td><td><strong>Andexanet alfa (Ondexxya®)</strong></td><td class="drug-dose">400–800 mg IV bolus selon dose et timing</td></tr>
+            <tr><td>Tous les AOD</td><td>CCP 4 facteurs (Kanokad®) si antidote indisponible</td><td class="drug-dose">25–50 UI/kg IV</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔬 Mesure de l'activité AOD</div>
+      <div class="grid3">
+        <div>
+          <div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px;">Dabigatran (anti-IIa)</div>
+          <div class="drug-note">TCA allongé (non corrélé à la dose) · Temps de thrombine dilué (Hemoclot®) : dosage précis · Anti-IIa chromogénique si disponible · TT normal = taux résiduel faible</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px;">Rivaroxaban / Edoxaban (anti-Xa)</div>
+          <div class="drug-note">TP abaissé (non spécifique) · Anti-Xa calibré Rivaroxaban : dosage précis · Valeur résiduelle &lt; 30 ng/mL = chirurgie sécurisée selon GIHP</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px;">Apixaban (anti-Xa)</div>
+          <div class="drug-note">TP peu modifié · Anti-Xa calibré Apixaban : dosage précis · &lt; 30 ng/mL = acceptable · HPLC si dosage spécifique non disponible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVK -->
+  <div id="hemo-avk" class="hemo-panel" style="display:none;">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🟡 Gestion AVK péri-opératoire (GIHP/SFAR 2024)</div>
+        <table>
+          <tr><th>Situation</th><th>CAT</th></tr>
+          <tr><td>Chirurgie élective, risque hémorragique faible</td><td>Arrêt AVK 5 jours avant · Contrôle INR J-1 · chirurgie si INR &lt; 1,5</td></tr>
+          <tr><td>Chirurgie élective, risque hémorragique élevé</td><td>Arrêt AVK 5 jours · Relais HBPM si risque thrombotique élevé · Arrêt HBPM 24h avant</td></tr>
+          <tr><td>INR trop élevé la veille</td><td class="drug-dose">Vit K1 1–2 mg PO · Recontrôle INR le matin J0</td></tr>
+        </table>
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">RISQUE THROMBOTIQUE AVK — Relais indiqué si :</div>
+          <table>
+            <tr><th>Indication AVK</th><th>Risque thrombotique</th><th>Relais HBPM</th></tr>
+            <tr><td>FA + CHA₂DS₂-VASc ≥ 3</td><td><span class="badge badge-danger">Élevé</span></td><td>Oui (curatif)</td></tr>
+            <tr><td>Valve mécanique mitrale</td><td><span class="badge badge-danger">Très élevé</span></td><td>Oui (curatif) · HNF IV si haut risque</td></tr>
+            <tr><td>ETEV récente (&lt; 3 mois)</td><td><span class="badge badge-danger">Élevé</span></td><td>Oui (curatif)</td></tr>
+            <tr><td>FA + CHA₂DS₂-VASc 1–2</td><td><span class="badge badge-warn">Modéré</span></td><td>Discuter au cas par cas</td></tr>
+            <tr><td>FA + CHA₂DS₂-VASc 0</td><td><span class="badge badge-green">Faible</span></td><td>Non</td></tr>
+            <tr><td>Valve mécanique aortique isolée</td><td><span class="badge badge-warn">Modéré</span></td><td>Non si pas d'autre FDR</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚡ Réversion AVK en urgence</div>
+        <div class="urgency-banner" style="background:rgba(230,57,70,0.08);border-color:rgba(230,57,70,0.3);margin-bottom:12px;">Objectif : INR &lt; 1,5 avant chirurgie urgente</div>
+        <div class="algo-step"><div class="step-num">1</div><div class="step-content"><strong>CCP 4 facteurs (Kanokad® / Confidex®) — 1ère intention</strong><p class="drug-dose editable" ondblclick="editField(this)">INR 2–4 → 25 UI/kg · INR 4–6 → 35 UI/kg · INR &gt;6 → 50 UI/kg · Max 3000 UI</p></div></div>
+        <div class="algo-step"><div class="step-num">2</div><div class="step-content"><strong>Vitamine K1 (Konakion®) systématique</strong><p class="drug-dose editable" ondblclick="editField(this)">5–10 mg IV lente (30 min) · Effet à 6–12h · Prévient rebond</p></div></div>
+        <div class="algo-step"><div class="step-num">3</div><div class="step-content"><strong>Contrôle INR 30 min après CCP</strong><p>Objectif INR &lt; 1,5 · Répéter CCP si insuffisant</p></div></div>
+        <div class="algo-step"><div class="step-num">4</div><div class="step-content"><strong>PFC si CCP indisponible</strong><p class="drug-dose editable" ondblclick="editField(this)">15–20 mL/kg · Moins efficace · Risque surcharge volémique</p></div></div>
+        <div class="info-box" style="margin-top:10px;">Reprise AVK post-op : dès que risque hémorragique acceptable (J1–J3 selon chirurgie) · Pont HBPM si haut risque thrombotique</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HBPM / HNF -->
+  <div id="hemo-hbpm" class="hemo-panel" style="display:none;">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">💉 HBPM — Délais péri-opératoires (GIHP/SFAR 2024)</div>
+        <table>
+          <tr><th>Type de dose</th><th>Arrêt avant chirurgie</th><th>Reprise après</th></tr>
+          <tr><td><strong>Prophylactique</strong><div class="abx-class">Enoxaparine 4000 UI, Tinzaparine 3500 UI</div></td><td class="drug-dose">12h avant</td><td class="drug-dose">6–12h post-op (risque faible)<br>24h (risque modéré)</td></tr>
+          <tr><td><strong>Curative</strong><div class="abx-class">Enoxaparine 100 UI/kg × 2 ou 175 UI/kg × 1</div></td><td class="drug-dose">24h avant</td><td class="drug-dose">48–72h post-op</td></tr>
+          <tr><td><strong>Intermédiaire</strong><div class="abx-class">Enoxaparine 4000–6000 UI × 2</div></td><td class="drug-dose">12–24h avant</td><td class="drug-dose">24–48h post-op</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">⚠️ IRC sévère (DFG &lt;30 mL/min) : préférer HNF (non dialysable) · Contrôle Anti-Xa si HBPM curative et IRC</div>
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:6px;">POSOLOGIES HBPM COURANTES</div>
+          <table>
+            <tr><th>Médicament</th><th>Prophylaxie</th><th>Curatif</th></tr>
+            <tr><td>Enoxaparine (Lovenox®)</td><td class="drug-dose">4000 UI SC/j</td><td class="drug-dose">100 UI/kg × 2/j ou 175 UI/kg × 1/j</td></tr>
+            <tr><td>Tinzaparine (Innohep®)</td><td class="drug-dose">3500 UI SC/j</td><td class="drug-dose">175 UI/kg × 1/j</td></tr>
+            <tr><td>Daltéparine (Fragmine®)</td><td class="drug-dose">5000 UI SC/j</td><td class="drug-dose">100 UI/kg × 2/j</td></tr>
+            <tr><td>Nadroparine (Fraxiparine®)</td><td class="drug-dose">2850 UI SC/j</td><td class="drug-dose">85 UI/kg × 2/j</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏥 HNF — Héparine Non Fractionnée</div>
+        <table>
+          <tr><th>Indication</th><th>Protocole</th></tr>
+          <tr><td>Prophylaxie ETEV</td><td class="drug-dose">5000 UI SC × 2–3/j · Pas de surveillance biologique</td></tr>
+          <tr><td>Curatif TVP/EP</td><td class="drug-dose">Bolus 80 UI/kg IV puis IVSE 18 UI/kg/h · Adapter TCA (2–3× témoin)</td></tr>
+          <tr><td>Relais valve mécanique / haut risque</td><td class="drug-dose">IVSE 500–1500 UI/h · TCA cible 60–100s</td></tr>
+          <tr><td>Arrêt avant chirurgie</td><td class="drug-dose">4–6h avant (IV) · Contrôle TCA avant bloc</td></tr>
+          <tr><td>Antidote : Protamine</td><td class="drug-dose">1 mg protamine / 100 UI HNF · Max 50 mg IV lente · TCA 10 min après</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;border-left-color:var(--warn);">Anti-Xa cible HBPM curatif : <strong>0,5–1,0 UI/mL</strong> (prélèvement 4h après injection) · HBPM curatif haut risque : 0,6–1,0 UI/mL</div>
+        <div class="info-box" style="border-left-color:var(--danger);">TIH (Thrombopénie Induite à l'Héparine) : plaquettes &lt; 50% valeur de base entre J5–J21 → Stop toute héparine → Danaparoïde (Orgaran®) ou Argatroban (Arganova®)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANTIPLAQUETTAIRES -->
+  <div id="hemo-antiplaq" class="hemo-panel" style="display:none;">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🔴 Antiplaquettaires — Gestion péri-opératoire (GIHP 2024)</div>
+        <table>
+          <tr><th>Molécule</th><th>Chirurgie faible risque</th><th>Chirurgie élevé risque</th><th>Délai d'arrêt</th></tr>
+          <tr><td><strong>Aspirine</strong></td><td><span class="badge badge-green">Maintenir</span></td><td>Discuter · Arrêt si risque ++ (neurochir, rétine)</td><td>5–10 jours si arrêt</td></tr>
+          <tr><td><strong>Clopidogrel</strong> (Plavix®)</td><td>Arrêt si possible</td><td><span class="badge badge-danger">Arrêt 5 jours</span></td><td>5 jours</td></tr>
+          <tr><td><strong>Prasugrel</strong> (Efient®)</td><td>Arrêt si possible</td><td><span class="badge badge-danger">Arrêt 7 jours</span></td><td>7 jours</td></tr>
+          <tr><td><strong>Ticagrelor</strong> (Brilique®)</td><td>Arrêt si possible</td><td><span class="badge badge-danger">Arrêt 5 jours</span></td><td>5 jours</td></tr>
+          <tr><td><strong>Cangrelor</strong> (Kengrexal®)</td><td colspan="2">Relais IV bridging péri-op (action réversible 60 min)</td><td>Arrêt 1–2h avant</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">⚠️ <strong>Stent coronarien récent</strong> : Ne JAMAIS arrêter la double antiplaquettaire avant 1 mois (stent nu) ou 6–12 mois (stent actif) sans avis cardiologique</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚨 Saignement sous antiplaquettaires</div>
+        <div class="algo-step"><div class="step-num">1</div><div class="step-content"><strong>Compression locale + correction facteurs associés</strong><p>Acide tranexamique 1g IV · Correction anémie · Normothermie</p></div></div>
+        <div class="algo-step"><div class="step-num">2</div><div class="step-content"><strong>Transfusion plaquettaire si saignement incontrôlable</strong><p class="drug-dose editable" ondblclick="editField(this)">1 CPA (ou 1 pool plaquettaire) = 1 unité · Objectif PQ &gt; 80 G/L si saignement actif</p></div></div>
+        <div class="algo-step"><div class="step-num">3</div><div class="step-content"><strong>Desmopressine (DDAVP)</strong><p class="drug-dose editable" ondblclick="editField(this)">0,3 µg/kg IV sur 30 min · Libère FvW endogène · Utile si aspirine</p></div></div>
+        <div class="algo-step"><div class="step-num">4</div><div class="step-content"><strong>Facteur VIIa recombinant (rFVIIa) si réfractaire</strong><p class="drug-dose editable" ondblclick="editField(this)">90 µg/kg IV · Hors AMM hémorragie antiplaquettaire · Avis spécialisé</p></div></div>
+        <div class="info-box" style="margin-top:10px;">La transfusion plaquettaire n'est pas efficace si le patient a reçu Ticagrelor dans les 12h (réversible par dialyse seulement)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- URGENCE HÉMORRAGIQUE -->
+  <div id="hemo-urgence" class="hemo-panel" style="display:none;">
+    <div class="card">
+      <div class="card-title">🚨 Hémorragie massive — Protocole transfusionnel</div>
+      <div class="urgency-banner">⚠️ APPEL EFS + Réanimateur + Chirurgien dès suspicion hémorragie massive</div>
+      <div class="grid2">
+        <div>
+          <div class="algo-step"><div class="step-num">1</div><div class="step-content"><strong>Acide tranexamique immédiat</strong><p class="drug-dose editable" ondblclick="editField(this)">1 g IV sur 10 min · puis 1 g IV sur 8h · À donner dans l'heure (CRASH-2)</p></div></div>
+          <div class="algo-step"><div class="step-num">2</div><div class="step-content"><strong>Activation protocole hémorragie massive</strong><p>CGR + PFC + CPA en ratio 1:1:1 · Appel banque du sang</p></div></div>
+          <div class="algo-step"><div class="step-num">3</div><div class="step-content"><strong>Fibrinogène si Fg &lt; 1,5 g/L</strong><p class="drug-dose editable" ondblclick="editField(this)">Clottagen® / Haemocomplettan® 3–4 g IV · Répéter si Fg reste &lt; 2 g/L</p></div></div>
+          <div class="algo-step"><div class="step-num">4</div><div class="step-content"><strong>CCP 4 facteurs si AVK ou déficit facteurs</strong><p class="drug-dose editable" ondblclick="editField(this)">25–50 UI/kg IV · Kanokad® / Confidex®</p></div></div>
+          <div class="algo-step"><div class="step-num">5</div><div class="step-content"><strong>Contrôle biologique rapproché</strong><p>NFS + TP/TCA + Fg + Anti-Xa + Thromboélastographie (TEG/ROTEM) toutes les 30 min</p></div></div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:10px;">OBJECTIFS BIOLOGIQUES EN HÉMORRAGIE</div>
+          <table>
+            <tr><th>Paramètre</th><th>Cible</th></tr>
+            <tr><td>Hémoglobine</td><td class="drug-dose">&gt; 7–8 g/dL · &gt;10 g/dL si cardiopathie</td></tr>
+            <tr><td>Plaquettes</td><td class="drug-dose">&gt; 50 G/L · &gt;100 G/L si neurochirurgie</td></tr>
+            <tr><td>Fibrinogène</td><td class="drug-dose">&gt; 2 g/L (idéalement &gt;1,5 g/L minimum)</td></tr>
+            <tr><td>TP</td><td class="drug-dose">&gt; 40%</td></tr>
+            <tr><td>Température</td><td class="drug-dose">&gt; 35°C (coagulopathie du froid)</td></tr>
+            <tr><td>pH</td><td class="drug-dose">&gt; 7,2 (acidose = coagulopathie)</td></tr>
+            <tr><td>Calcium ionisé</td><td class="drug-dose">&gt; 1,1 mmol/L (hypoCa si transfusion massive)</td></tr>
+          </table>
+          <div class="info-box" style="margin-top:10px;">ROTEM/TEG disponible → Guidage ciblé plus efficace que biologie conventionnelle seule · Réduit les transfusions inutiles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSFUSION -->
+  <div id="hemo-transfusion" class="hemo-panel" style="display:none;">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🩸 Seuils transfusionnels (SFAR 2023)</div>
+        <table>
+          <tr><th>Population</th><th>Seuil transfusion CGR</th></tr>
+          <tr><td>Patient sain, chirurgie élective</td><td><span class="badge badge-danger">Hb &lt; 7 g/dL</span></td></tr>
+          <tr><td>Cardiopathie ischémique stable</td><td><span class="badge badge-warn">Hb &lt; 8 g/dL</span></td></tr>
+          <tr><td>Cardiopathie ischémique instable / SCA</td><td><span class="badge badge-warn">Hb &lt; 9–10 g/dL</span></td></tr>
+          <tr><td>Post-op chirurgie cardiaque</td><td><span class="badge badge-warn">Hb &lt; 8 g/dL</span></td></tr>
+          <tr><td>Hémorragie active avec instabilité HD</td><td>Transfusion immédiate sans attendre le seuil</td></tr>
+          <tr><td>Réanimation / sepsis sévère</td><td><span class="badge badge-danger">Hb &lt; 7 g/dL</span></td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">1 CGR ↑ Hb de ~1 g/dL chez l'adulte (70 kg) · Recontrôle NFS 15–30 min post-transfusion</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💛 Concentrés plaquettaires & PFC</div>
+        <table>
+          <tr><th>Produit</th><th>Indication</th><th>Dose</th></tr>
+          <tr><td><strong>CPA</strong> (Concentré Plaquettaire d'Aphérèse)</td><td>PQ &lt; 50 G/L + saignement · &lt;100 G/L si neurochirurgie</td><td class="drug-dose">1 CPA = +30–50 G/L</td></tr>
+          <tr><td><strong>PFC</strong> (Plasma Frais Congelé)</td><td>Coagulopathie dilutionnelle · TP &lt;40% · Hémorragie massive</td><td class="drug-dose">15–20 mL/kg</td></tr>
+          <tr><td><strong>Fibrinogène</strong> (Clottagen®)</td><td>Fg &lt; 1,5 g/L ou &lt;2 g/L si hémorragie active</td><td class="drug-dose">3–4 g IV · Répéter selon ROTEM</td></tr>
+          <tr><td><strong>CCP 4 facteurs</strong> (Kanokad®)</td><td>Réversion AVK · Déficit facteurs II,VII,IX,X</td><td class="drug-dose">25–50 UI/kg selon INR</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">
+          <strong>Calcium IV :</strong> Gluconate de calcium 1 g IV ou CaCl₂ 0,5 g IV après chaque 4 CGR transfusés (chélation par citrate) — cible CaI &gt; 1,1 mmol/L
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section-hemostase -->
+
+<!-- TRAITEMENTS PÉRI-OP -->
+<div id="section-traitements" class="section">
+  <div class="urgency-banner" style="background:rgba(0,180,216,0.08);border-color:rgba(0,180,216,0.3);color:var(--accent);">💉 <strong>Traitements péri-opératoires</strong> · Gestion des pathologies chroniques en péri-opératoire · SFAR / SFC / SFD 2024</div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+    <button class="btn" onclick="showTraitTab('diabete',this)">🩺 Diabète</button>
+    <button class="btn-ghost" onclick="showTraitTab('hta',this)">💊 HTA</button>
+    <button class="btn-ghost" onclick="showTraitTab('cardio',this)">❤️ Cardio</button>
+    <button class="btn-ghost" onclick="showTraitTab('cortico',this)">💊 Corticoïdes</button>
+    <button class="btn-ghost" onclick="showTraitTab('psy',this)">🧠 Psychiatriques</button>
+    <button class="btn-ghost" onclick="showTraitTab('antibio',this)">🦠 Antibioprophylaxie</button>
+  </div>
+
+  <!-- DIABÈTE -->
+  <div id="trait-diabete" class="trait-panel">
+    <div class="info-box">📌 <strong>Référence :</strong> SFAR/SFD — Fiches simplifiées Diabète péri-opératoire 2025</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🩺 DT2 — Antidiabétiques oraux et GLP-1</div>
+        <table>
+          <tr><th>Classe</th><th>Molécule</th><th>CAT péri-op</th></tr>
+          <tr><td>Metformine</td><td>Glucophage®</td><td><span class="badge badge-danger">Arrêt J-1</span> si risque IR ou produit de contraste iodé · Reprise J+1 si DFG stable</td></tr>
+          <tr><td>Sulfamides / Glinides</td><td>Glibenclamide, Amarel®</td><td><span class="badge badge-danger">Arrêt J0</span> matin (risque hypoglycémie) · Reprise J+1 à alimentation</td></tr>
+          <tr><td>iDPP4</td><td>Januvia®, Galvus®</td><td><span class="badge badge-green">Maintien</span> possible · Arrêt si NPO prolongé</td></tr>
+          <tr><td>iSGLT2</td><td>Jardiance®, Forxiga®</td><td><span class="badge badge-danger">Arrêt 3–4 jours avant</span> · Risque acidocétose euglycémique perop</td></tr>
+          <tr><td>GLP-1 agonistes</td><td>Ozempic®, Victoza®, Mounjaro®</td><td><span class="badge badge-danger">Arrêt 1 sem (hebdo) ou J0 (quotidien)</span> · Gastroparésie → ISR</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;border-left-color:var(--danger);">⚠️ iSGLT2 (Jardiance®, Forxiga®) → Acidocétose euglycémique péri-opératoire même si glycémie normale ! Dosage cétonurie si doute en post-op.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💉 Insuline péri-opératoire</div>
+        <table>
+          <tr><th>Type de chirurgie</th><th>Protocole</th></tr>
+          <tr><td>Chirurgie courte, DT2 équilibré</td><td>Maintien insuline basale à demi-dose le matin · Stop rapides · Glycémie cap toutes les heures</td></tr>
+          <tr><td>Chirurgie lourde / NPO prolongé</td><td class="drug-dose">IVSE insuline : Démarrer 0,05–0,1 UI/kg/h · Adapter selon glycémie capillaire/h</td></tr>
+          <tr><td>DT1 (jamais sans insuline)</td><td class="drug-dose">Toujours maintenir basale (demi-dose) · IVSE insuline si chirurgie longue · Glucose 5% 100 mL/h</td></tr>
+        </table>
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">CIBLES GLYCÉMIQUES PÉRI-OPÉRATOIRES (SFAR/SFD 2025)</div>
+          <table>
+            <tr><th>Phase</th><th>Cible glycémie</th></tr>
+            <tr><td>Peropératoire</td><td><span class="badge badge-warn">6–10 mmol/L (1,1–1,8 g/L)</span></td></tr>
+            <tr><td>Post-opératoire réanimation</td><td><span class="badge badge-warn">6–10 mmol/L</span></td></tr>
+            <tr><td>Hypoglycémie &lt; 3,9 mmol/L</td><td class="drug-dose">G30% 20 mL IV · ou G10% 100 mL IV · Recontrôle 15 min</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HTA -->
+  <div id="trait-hta" class="trait-panel" style="display:none;">
+    <div class="card">
+      <div class="card-title">💊 Antihypertenseurs — CAT péri-opératoire (ESC/SFAR)</div>
+      <table>
+        <tr><th>Classe</th><th>Exemple</th><th>CAT péri-op</th><th>Justification</th></tr>
+        <tr><td>Bêta-bloquants</td><td>Bisoprolol, Aténolol</td><td><span class="badge badge-green">Maintien impératif</span></td><td>Arrêt = risque rebond · Bradycardie per-op : gérable</td></tr>
+        <tr><td>IEC</td><td>Ramipril, Périndopril</td><td><span class="badge badge-warn">Arrêt 24–48h avant</span></td><td>Hypotension réfractaire per-op · Reprendre J+1</td></tr>
+        <tr><td>ARA2 / sartans</td><td>Valsartan, Candésartan</td><td><span class="badge badge-warn">Arrêt 24–48h avant</span></td><td>Même raison IEC · Résistance aux vasopresseurs</td></tr>
+        <tr><td>Inhibiteurs calciques</td><td>Amlodipine, Diltiazem</td><td><span class="badge badge-green">Maintien</span></td><td>Bien tolérés per-op · Maintien si possible</td></tr>
+        <tr><td>Diurétiques thiazidiques</td><td>Hydrochlorothiazide</td><td><span class="badge badge-warn">Arrêt J0 matin</span></td><td>Risque hypovolémie · Ionogramme à contrôler</td></tr>
+        <tr><td>Diurétiques de l'anse</td><td>Furosémide</td><td>Maintien si IC · Arrêt si hypovolémie</td><td>Selon indication initiale</td></tr>
+        <tr><td>Alpha-bloquants</td><td>Prazosine, Doxazosine</td><td><span class="badge badge-warn">Prudence</span> · Hypotension perop</td><td>Synergie avec anesthésiques</td></tr>
+      </table>
+      <div class="info-box" style="margin-top:10px;">HTA sévère non traitée (PAS &gt;180 / PAD &gt;110) → Reporter la chirurgie élective · Optimisation anti-HTA · Avis cardiologue si urgence différable</div>
+    </div>
+  </div>
+
+  <!-- CARDIO -->
+  <div id="trait-cardio" class="trait-panel" style="display:none;">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">❤️ Médicaments cardiaques péri-opératoires</div>
+        <table>
+          <tr><th>Médicament</th><th>CAT</th></tr>
+          <tr><td>Statines</td><td><span class="badge badge-green">Maintien impératif</span> · Arrêt = augmentation risque cardiaque péri-op</td></tr>
+          <tr><td>Digoxine</td><td><span class="badge badge-warn">Maintien</span> · Dosage digoxinémie si suspicion de toxicité · Ionogramme</td></tr>
+          <tr><td>Amiodarone</td><td><span class="badge badge-green">Maintien</span> · T1/2 très longue · Interactions avec anesthésiques</td></tr>
+          <tr><td>Ivabradine (Procoralan®)</td><td><span class="badge badge-warn">Arrêt J0</span> matin · Peut masquer tachycardie compensatoire</td></tr>
+          <tr><td>Sacubitril/Valsartan (Entresto®)</td><td><span class="badge badge-warn">Arrêt 24–48h</span> si IECA associés · Hypotension réfractaire perop</td></tr>
+          <tr><td>Ranolazine (Ranexa®)</td><td><span class="badge badge-warn">Maintien avec prudence</span> · Allongement QT · Interactions</td></tr>
+          <tr><td>Nicorandil</td><td><span class="badge badge-green">Maintien</span> · Bénéfice cardioprotecteur péri-op</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">🔋 Défibrillateur implantable (DAI) & Pacemaker</div>
+        <div class="algo-step"><div class="step-num">1</div><div class="step-content"><strong>Identifier le dispositif avant la chirurgie</strong><p>Carte patient · Interrogation par cardiologue référent · Type (pacemaker dépendant ?) </p></div></div>
+        <div class="algo-step"><div class="step-num">2</div><div class="step-content"><strong>DAI : Désactivation chocs anti-FV perop</strong><p>Si bistouri électrique → Risque de décharges inappropriées · Désactiver avec aimant ou programmation</p></div></div>
+        <div class="algo-step"><div class="step-num">3</div><div class="step-content"><strong>Pacemaker dépendant</strong><p>Mode asynchrone (VOO/DOO) avec aimant si bistouri · Défibrillateur externe disponible</p></div></div>
+        <div class="algo-step"><div class="step-num">4</div><div class="step-content"><strong>Post-op : Réactivation du DAI</strong><p>Avant sortie de salle · Vérification par cardiologue dans les 24h</p></div></div>
+        <div class="drug-note">⚠️ Bistouri bipolaire préférable · Plaques de bistouri éloignées du boîtier · ECG monitorage continu · Défibrillateur externe prêt en salle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORTICOÏDES -->
+  <div id="trait-cortico" class="trait-panel" style="display:none;">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">💊 Supplémentation glucocorticoïde péri-opératoire</div>
+        <div class="info-box">Indiqué si corticothérapie chronique ≥ 5 mg/j équiv. prednisone depuis &gt; 3 semaines → Insuffisance surrénalienne relative possible</div>
+        <table>
+          <tr><th>Type de chirurgie</th><th>Supplémentation</th></tr>
+          <tr><td>Chirurgie mineure (anesthésie locale, endoscopie)</td><td>Maintien traitement habituel · Pas de supplément</td></tr>
+          <tr><td>Chirurgie modérée (cholécystectomie, PTH)</td><td class="drug-dose">Hydrocortisone 50 mg IV à l'induction · puis 25 mg/6h × 24h</td></tr>
+          <tr><td>Chirurgie majeure (cardiaque, abdominale lourde)</td><td class="drug-dose">Hydrocortisone 100 mg IV à l'induction · puis 50 mg/6h × 48–72h · puis dégressif</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;border-left-color:var(--danger);">Signes d'insuffisance surrénalienne aiguë post-op : Hypotension réfractaire · Hypoglycémie · Hyponatrémie · Hyperkaliémie · Fièvre → Hydrocortisone 100 mg IV immédiat</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💉 Corticoïdes post-opératoires — NVPO</div>
+        <table>
+          <tr><th>Molécule</th><th>Dose</th><th>Indication</th></tr>
+          <tr><td>Dexaméthasone</td><td class="drug-dose">4–8 mg IV à l'induction</td><td>Prophylaxie NVPO + effet anti-inflammatoire analgésique · Hyperglycémie ++ chez diabétiques</td></tr>
+          <tr><td>Méthylprednisolone</td><td class="drug-dose">125 mg IV perop</td><td>Chirurgie majeure · ORL · Neuro · Anti-œdème</td></tr>
+          <tr><td>Bétaméthasone</td><td class="drug-dose">0,2 mg/kg IV</td><td>Maturation pulmonaire (obstétrique) · Chirurgie cérébrovasculaire</td></tr>
+        </table>
+        <div class="drug-note" style="margin-top:8px;">⚠️ Dexaméthasone 8 mg → Glycémie peut ↑ de 2–4 mmol/L chez le diabétique · Surveillance glycémie capillaire renforcée 6h post-injection</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PSYCHIATRIQUES -->
+  <div id="trait-psy" class="trait-panel" style="display:none;">
+    <div class="card">
+      <div class="card-title">🧠 Psychotropes — CAT péri-opératoire</div>
+      <table>
+        <tr><th>Classe / Molécule</th><th>CAT</th><th>Précaution</th></tr>
+        <tr><td><strong>ISRS</strong> (Prozac®, Zoloft®, Deroxat®)</td><td><span class="badge badge-green">Maintien</span></td><td>Risque saignement accru (antiplaquettaire-like) · Hyponatrémie · Synergie douleur</td></tr>
+        <tr><td><strong>IRSN</strong> (Effexor®, Cymbalta®)</td><td><span class="badge badge-green">Maintien</span></td><td>Même risques ISRS · Douleur neuropathique (bénéfice péri-op)</td></tr>
+        <tr><td><strong>IMAO irréversibles</strong> (Marsilid®)</td><td><span class="badge badge-danger">Arrêt 2 semaines</span></td><td>CI absolue Succinylcholine, Péthidine, Tramadol, Éphédrine → Crise hypertensive/sérotoninergique</td></tr>
+        <tr><td><strong>IMAO réversibles</strong> (Moclobémide)</td><td><span class="badge badge-warn">Arrêt 24h</span></td><td>Interactions moins sévères mais précaution opioïdes</td></tr>
+        <tr><td><strong>Lithium</strong> (Téralithe®)</td><td><span class="badge badge-warn">Maintien avec surveillance</span></td><td>Lithiémie préop · Interactions AINS et diurétiques · Risque toxicité si déshydratation</td></tr>
+        <tr><td><strong>Antipsychotiques</strong> (Rispéridone, Halopéridol)</td><td><span class="badge badge-green">Maintien</span></td><td>Allongement QT · Syndrome malin des neuroleptiques si arrêt brutal</td></tr>
+        <tr><td><strong>Benzodiazépines</strong> (Valium®, Lexomil®)</td><td><span class="badge badge-warn">Maintien</span> + réduction progressive</td><td>Tolérance croisée anesthésiques · Sevrage brutal = convulsions/delirium tremens</td></tr>
+        <tr><td><strong>Antiépileptiques</strong> (Lévétiracétam, Valproate, Lamotrigine)</td><td><span class="badge badge-green">Maintien impératif</span></td><td>Interactions enzymatiques (valproate inhibe, carbamazépine induit) · Prendre le matin J0</td></tr>
+      </table>
+      <div class="info-box" style="margin-top:10px;">
+        <strong>Syndrome sérotoninergique :</strong> Agitation · Myoclonies · Hyperthermie · Tachycardie → Arrêt des sérotoninergiques · Cyproheptadine (Periactine®) 4–8 mg PO · Benzodiazépines pour sédation · Réa si sévère
+      </div>
+    </div>
+  </div>
+
+  <!-- ANTIBIOPROPHYLAXIE -->
+  <div id="trait-antibio" class="trait-panel" style="display:none;">
+    <div class="info-box">📌 <strong>Référence :</strong> SFAR — Antibioprophylaxie en chirurgie 2023 · Objectif : réduire le risque d'infection du site opératoire (ISO)</div>
+    <div class="card">
+      <div class="card-title">🦠 Protocoles d'antibioprophylaxie par spécialité</div>
+      <table>
+        <tr><th>Type de chirurgie</th><th>Antibiotique 1ère intention</th><th>Allergie pénicilline</th><th>Timing / Répétition</th></tr>
+        <tr><td>Chirurgie propre (orthopédie, hernie)</td><td class="drug-dose">Céfazoline 2g IV (≥80kg : 3g)</td><td class="drug-dose">Clindamycine 600 mg IV</td><td>30–60 min avant incision · Répéter si durée &gt;4h ou perte sang &gt;1,5L</td></tr>
+        <tr><td>Chirurgie digestive colorectale</td><td class="drug-dose">Céfazoline 2g IV + Métronidazole 500 mg IV</td><td class="drug-dose">Clindamycine 600 mg + Genta 1,5 mg/kg</td><td>30–60 min avant · Répéter céfazoline /4h</td></tr>
+        <tr><td>Appendicectomie</td><td class="drug-dose">Amox-Clav 2g IV</td><td class="drug-dose">Métronidazole 500 mg + Genta 1,5 mg/kg</td><td>30 min avant · Dose unique si appendice sain</td></tr>
+        <tr><td>Chirurgie cardiaque (sternotomie)</td><td class="drug-dose">Céfazoline 2g IV (3g si ≥80kg)</td><td class="drug-dose">Vancomycine 15 mg/kg IV sur 1h</td><td>30–60 min avant · Répéter /4h per-op · Poursuivre 24–48h</td></tr>
+        <tr><td>PTH / PTG (orthopédie prothétique)</td><td class="drug-dose">Céfazoline 2g IV</td><td class="drug-dose">Vancomycine 15 mg/kg IV</td><td>30–60 min avant · Dose unique ou 24h max</td></tr>
+        <tr><td>Urologie (voie endoscopique)</td><td class="drug-dose">Ciprofloxacine 400 mg IV ou Gentamicine 1,5 mg/kg</td><td class="drug-dose">Gentamicine 1,5 mg/kg</td><td>30–60 min avant · Dose unique</td></tr>
+        <tr><td>Neurochirurgie (craniotomie)</td><td class="drug-dose">Céfazoline 2g IV</td><td class="drug-dose">Clindamycine 600 mg IV</td><td>30–60 min avant · Pas de répétition systématique</td></tr>
+        <tr><td>Césarienne</td><td class="drug-dose">Céfazoline 2g IV</td><td class="drug-dose">Clindamycine 600 mg IV + Gentamicine 1,5 mg/kg</td><td>Avant incision cutanée · Dose unique</td></tr>
+        <tr><td>Chirurgie ORL (propre-contaminée)</td><td class="drug-dose">Amox-Clav 2g IV</td><td class="drug-dose">Clindamycine 600 mg IV</td><td>30–60 min avant · Dose unique</td></tr>
+        <tr><td>Chirurgie vasculaire (artère)</td><td class="drug-dose">Céfazoline 2g IV</td><td class="drug-dose">Clindamycine 600 mg + Genta 1,5 mg/kg</td><td>30–60 min avant · Répéter si &gt;4h ou saignement</td></tr>
+      </table>
+      <div class="grid2" style="margin-top:12px;">
+        <div class="info-box">
+          <strong>Répétition per-opératoire :</strong> Céfazoline → répéter toutes les 4h si chirurgie longue ou perte sanguine &gt; 1,5 L · Amox-Clav → répéter toutes les 3h · Vancomycine → pas de répétition systématique
+        </div>
+        <div class="info-box" style="border-left-color:var(--danger);">
+          <strong>Allergie pénicilline :</strong> Réaction sévère IgE-médiée → Vancomycine ou Clindamycine · Réaction légère (rash tardif) → Céphalosporine acceptable (allergie croisée &lt;2%)
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section-traitements -->
+
 <!-- MODAL -->
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
   <div class="modal">
@@ -2858,35 +2887,6 @@ function editField(el) {
   };
 }
 
-// ── CHECKLIST
-function toggleCheck(item) {
-  var cb = item.querySelector('input[type=checkbox]');
-  cb.checked = !cb.checked;
-  item.classList.toggle('done', cb.checked);
-  updateProgress();
-}
-function updateProgress() {
-  var items = document.querySelectorAll('.check-item');
-  var done = document.querySelectorAll('.check-item.done');
-  var pct = items.length ? (done.length / items.length * 100) : 0;
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-label').textContent = done.length + ' / ' + items.length + ' tâches complétées';
-}
-function resetChecklist() {
-  document.querySelectorAll('.check-item').forEach(function(i) {
-    i.classList.remove('done'); i.querySelector('input').checked = false;
-  });
-  updateProgress();
-}
-updateProgress();
-
-// ── NOTES
-function saveNotes() { localStorage.setItem('livret-notes', document.getElementById('notes-area').value); }
-function clearNotes() { if (confirm('Effacer toutes les notes ?')) { document.getElementById('notes-area').value = ''; saveNotes(); } }
-function printNotes() { var w = window.open(); w.document.write('<pre style="font:14px monospace;padding:20px;">' + document.getElementById('notes-area').value + '</pre>'); w.print(); }
-var savedNotes = localStorage.getItem('livret-notes');
-if (savedNotes) document.getElementById('notes-area').value = savedNotes;
-document.getElementById('notes-area').addEventListener('input', saveNotes);
 
 // ── SEARCH
 function searchContent(q) {
@@ -2993,18 +2993,36 @@ function showConsultTab(tab, btn) {
   if (btn) btn.className = 'btn';
 }
 
+
+// ── HÉMOSTASE TABS
+function showHemoTab(tab, btn) {
+  document.querySelectorAll('.hemo-panel').forEach(function(p) { p.style.display = 'none'; });
+  var panel = document.getElementById('hemo-' + tab);
+  if (panel) panel.style.display = 'block';
+  document.querySelectorAll('#section-hemostase > div[style*="flex"] .btn, #section-hemostase > div[style*="flex"] .btn-ghost').forEach(function(b) { b.className = 'btn-ghost'; });
+  if (btn) btn.className = 'btn';
+}
+
+// ── TRAITEMENTS PÉRI-OP TABS
+function showTraitTab(tab, btn) {
+  document.querySelectorAll('.trait-panel').forEach(function(p) { p.style.display = 'none'; });
+  var panel = document.getElementById('trait-' + tab);
+  if (panel) panel.style.display = 'block';
+  document.querySelectorAll('#section-traitements > div[style*="flex"] .btn, #section-traitements > div[style*="flex"] .btn-ghost').forEach(function(b) { b.className = 'btn-ghost'; });
+  if (btn) btn.className = 'btn';
+}
+
 // ── MODAL
 var currentModal = '';
 function openModal(type) {
   currentModal = type;
-  var titles = { protocole: 'Ajouter un protocole', medicament: 'Ajouter un médicament', antibio: 'Ajouter un antibiotique', contact: 'Ajouter un contact', checklist: 'Ajouter une tâche' };
+  var titles = { protocole: 'Ajouter un protocole', medicament: 'Ajouter un médicament', antibio: 'Ajouter un antibiotique', contact: 'Ajouter un contact' };
   document.getElementById('modal-title').textContent = titles[type] || 'Ajouter';
   var bodies = {
     protocole: '<input id="m1" placeholder="Titre du protocole"><textarea id="m2" rows="3" placeholder="Description / étapes"></textarea>',
     medicament: '<input id="m1" placeholder="Nom du médicament"><input id="m2" placeholder="Dose"><input id="m3" placeholder="Voie">',
     antibio: '<input id="m1" placeholder="Molécule"><input id="m2" placeholder="Dose"><input id="m3" placeholder="Intervalle"><input id="m4" placeholder="Indications">',
-    contact: '<input id="m1" placeholder="Nom / Service"><input id="m2" placeholder="Rôle"><input id="m3" placeholder="Numéro de téléphone">',
-    checklist: '<input id="m1" placeholder="Tâche à ajouter">'
+    contact: '<input id="m1" placeholder="Nom / Service"><input id="m2" placeholder="Rôle"><input id="m3" placeholder="Numéro de téléphone">'
   };
   document.getElementById('modal-body').innerHTML = bodies[type] || '';
   document.getElementById('modal-bg').classList.add('open');
@@ -3014,14 +3032,7 @@ function closeModal(e) { if (e.target.id === 'modal-bg') document.getElementById
 function saveModal() {
   var m1 = document.getElementById('m1') && document.getElementById('m1').value.trim();
   if (!m1) return;
-  if (currentModal === 'checklist') {
-    var div = document.createElement('div');
-    div.className = 'check-item';
-    div.innerHTML = '<input type="checkbox" onclick="event.stopPropagation();toggleCheck(this.parentElement)"><span>' + m1 + '</span>';
-    div.onclick = function() { toggleCheck(this); };
-    document.getElementById('checklist-items').appendChild(div);
-    updateProgress();
-  } else if (currentModal === 'contact') {
+  if (currentModal === 'contact') {
     var m2 = document.getElementById('m2') && document.getElementById('m2').value.trim();
     var m3 = document.getElementById('m3') && document.getElementById('m3').value.trim();
     var div2 = document.createElement('div');
@@ -3067,7 +3078,7 @@ function closeMobileNav() {
 (function initView() {
   var saved = localStorage.getItem('livret-view');
   if (saved === 'mobile' || (!saved && detectMobile())) applyMobileMode();
-  else if (saved === 'desktop') applyDesktopMode();
+  else applyDesktopMode();
 })();
 window.addEventListener('resize', function() {
   var saved = localStorage.getItem('livret-view');
