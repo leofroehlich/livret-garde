@@ -290,7 +290,7 @@ body.urgence-mode #main::before {
 .vent-panel, .intox-panel, .bio-panel, .transfusion-panel,
 .alr-panel, .anes-panel, .ped-panel, .ann-panel,
 .extra-score-panel, .aide-panel, .tech-panel, .sng-panel,
-.advcalc-panel, .sng-panel, .hemo-panel, .prep-panel, .proto-panel {
+.advcalc-panel, .sng-panel, .hemo-panel, .prep-panel, .proto-panel, .ett-panel, .obs-panel {
   display: none;
 }
 </style>
@@ -840,11 +840,14 @@ body.urgence-mode #main::before {
     <tr><td>Céfazoline</td><td class="drug-dose editable" ondblclick="editField(this)">2 g IV</td><td>toutes 8h</td><td>Prophylaxie, staphylocoque MS</td></tr>
     <tr><td>Ceftriaxone</td><td class="drug-dose editable" ondblclick="editField(this)">2 g IV</td><td>1x/j</td><td>Pneumonie, méningite, PNA</td></tr>
     <tr><td>Méropénème</td><td class="drug-dose editable" ondblclick="editField(this)">2 g IV (IVSE 3h)</td><td>toutes 8h</td><td>BMR, méningite, choc septique</td></tr>
+    <tr><td>Céfotaxime</td><td class="drug-dose editable" ondblclick="editField(this)">2 g IV</td><td>toutes 8h (méningite : /6h)</td><td>Méningite, sepsis, pneumonie, grossesse</td></tr>
+    <tr><td>Céfépime</td><td class="drug-dose editable" ondblclick="editField(this)">2 g IV (IVSE 3h)</td><td>toutes 8h</td><td>Neutropénie fébrile, Pseudomonas, PAVM</td></tr>
     </table>
     <div class="antibio-family">AMINOGLYCOSIDES &amp; AUTRES</div>
     <table><tr><th>Molécule</th><th>Dose</th><th>Intervalle</th><th>Indications</th></tr>
     <tr><td>Amikacine</td><td class="drug-dose editable" ondblclick="editField(this)">25–30 mg/kg IV</td><td>1x/j dose unique</td><td>Bithérapie sepsis, Pseudomonas, BMR</td></tr>
     <tr><td>Vancomycine</td><td class="drug-dose editable" ondblclick="editField(this)">25–30 mg/kg IV charge puis IVSE</td><td>AUC 400–600</td><td>SARM, CLABSI, endocardite</td></tr>
+    <tr><td>Teicoplanine</td><td class="drug-dose editable" ondblclick="editField(this)">12 mg/kg/12h IV ×3 (charge) puis 12 mg/kg/24h</td><td>1x/j entretien</td><td>SARM (alternative vanco), endocardite, simplicité IVSE</td></tr>
     <tr><td>Métronidazole</td><td class="drug-dose editable" ondblclick="editField(this)">500 mg IV</td><td>toutes 8h</td><td>Anaérobies, C. difficile, IIA</td></tr>
     <tr><td>Fluconazole</td><td class="drug-dose editable" ondblclick="editField(this)">400 mg IV J1 puis 200 mg</td><td>1x/j</td><td>Candidémie non-résistante</td></tr>
     </table>
@@ -942,6 +945,26 @@ body.urgence-mode #main::before {
         <div class="info-box">⚠️ Certaines bêta-lactamines sont instables en solution à température ambiante prolongée : imipénème (&gt;4h), ampicilline (&gt;8h). Vérifier la compatibilité avec la pharmacie avant perfusion continue.</div>
         <div class="info-box" style="border-left-color:var(--success);">✅ Avantages perfusion prolongée : meilleure bactéricidie pour CMI élevée · Réduction de la dose totale journalière possible · Moins de variations pic/résiduel</div>
       </div>
+    
+      <div class="card" style="margin-top:14px;">
+        <div class="card-title">💉 Posologies IVSE — Dose de charge + Dose journalière totale</div>
+        <div class="info-box" style="margin-bottom:12px;">Pour les antibiotiques administrables en IVSE continue ou perfusion prolongée : dose de charge initiale (bolus court) puis dose totale sur 24h en entretien continu. Adapter selon fonction rénale (clairance) et poids.</div>
+        <table>
+          <tr><th>Antibiotique</th><th>Dose de charge</th><th>Dose journalière IVSE continue</th><th>Adaptation IR</th></tr>
+          <tr><td><strong>Pipéracilline-Tazobactam</strong></td><td class="drug-dose editable" ondblclick="editField(this)">4 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">16 g/j IVSE continue (12–16 g selon CMI/poids)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 20–40 : 12 g/j · ClCr &lt;20 : 8 g/j</td></tr>
+          <tr><td><strong>Méropénème</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">6 g/j IVSE continue (germes CMI élevée : jusqu'à 8 g/j)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 25–50 : 4 g/j · ClCr &lt;25 : 2 g/j</td></tr>
+          <tr><td><strong>Céfotaxime (Claforan®)</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">6–8 g/j IVSE continue (méningite : jusqu'à 12 g/j)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 10–50 : 4 g/j · ClCr &lt;10 : 2 g/j</td></tr>
+          <tr><td><strong>Céfépime</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">6 g/j IVSE continue (neutropénie/Pseudomonas : jusqu'à 8 g/j)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 30–60 : 4 g/j · ClCr &lt;30 : 2 g/j</td></tr>
+          <tr><td><strong>Ceftazidime</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">6 g/j IVSE continue</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 30–50 : 3 g/j · ClCr &lt;30 : 1,5 g/j</td></tr>
+          <tr><td><strong>Ceftriaxone</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">2–4 g/j en 1 injection/j (pas d'IVSE continue, demi-vie longue)</td><td>Pas d'adaptation rénale nécessaire</td></tr>
+          <tr><td><strong>Imipénème-Cilastatine</strong></td><td class="drug-dose editable" ondblclick="editField(this)">1 g (sur 30–60 min)</td><td class="drug-dose editable" ondblclick="editField(this)">2–4 g/j en discontinu /6–8h (pas d'IVSE continue : risque convulsivant)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 20–40 : 1,5 g/j · ClCr &lt;20 : 1 g/j</td></tr>
+          <tr><td><strong>Vancomycine</strong></td><td class="drug-dose editable" ondblclick="editField(this)">25–30 mg/kg (sur 1–2h)</td><td class="drug-dose editable" ondblclick="editField(this)">30–40 mg/kg/j IVSE continue (cible AUC 400–600) · soit ~2–3 g/j pour 70 kg</td><td class="drug-dose editable" ondblclick="editField(this)">Adapter strictement au dosage sérique · ClCr basse = ↓ dose + espacer dosages</td></tr>
+          <tr><td><strong>Amoxicilline-Acide clavulanique</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2,2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">8,8 g/j IVSE continue (max 12 g/j) — éviter si possible (instabilité acide clavulanique en continu)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 10–30 : 4,4 g/j · ClCr &lt;10 : 2,2 g/j</td></tr>
+          <tr><td><strong>Aztréonam</strong></td><td class="drug-dose editable" ondblclick="editField(this)">2 g (sur 30 min)</td><td class="drug-dose editable" ondblclick="editField(this)">6–8 g/j IVSE continue (allergie pénicilline, BLSE)</td><td class="drug-dose editable" ondblclick="editField(this)">ClCr 10–30 : 4 g/j · ClCr &lt;10 : 2 g/j</td></tr>
+        </table>
+        <div class="drug-note" style="margin-top:8px;">⚠️ Imipénème : jamais en IVSE continue (risque convulsivant lié à l'accumulation) · Ceftriaxone : demi-vie longue (~8h), pas d'intérêt à la perfusion continue · Toujours débuter par la dose de charge en bolus court avant de basculer en IVSE continue, pour atteindre rapidement la concentration cible</div>
+      </div>
+
     </div>
   </div>
 
@@ -1281,8 +1304,12 @@ body.urgence-mode #main::before {
           <div><label style="font-size:11px;color:var(--text-dim);display:block;margin-bottom:4px;">Débit seringue (mL/h)</label><input type="number" id="gam-debit" value="5" step="0.5" oninput="calcGamma()" style="width:100%;background:var(--navy-light);border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--text);font-size:14px;font-weight:700;"></div>
           <div style="grid-column:span 2;"><label style="font-size:11px;color:var(--text-dim);display:block;margin-bottom:4px;">Concentration (mg/mL)</label>
           <select id="gam-conc" onchange="calcGamma()" style="width:100%;background:var(--navy-light);border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--text);font-size:13px;">
-            <option value="0.08">0,08 mg/mL — Noradrénaline 4 mg/50 mL</option>
-            <option value="0.04">0,04 mg/mL — Noradrénaline 2 mg/50 mL</option>
+            <option value="0.016">0,016 mg/mL — Norad Baby (0,8 mg/50 mL)</option>
+            <option value="0.167" selected>0,167 mg/mL — Norad Classique (8 mg/48 mL)</option>
+            <option value="0.333">0,333 mg/mL — Norad ×2 (16 mg/48 mL)</option>
+            <option value="0.667">0,667 mg/mL — Norad ×4 (32 mg/48 mL)</option>
+            <option value="1.0">1,0 mg/mL — Norad ×6 (48 mg/48 mL)</option>
+            <option value="2.0">2,0 mg/mL — Norad ×12 (96 mg/48 mL)</option>
             <option value="0.08">0,08 mg/mL — Adrénaline 4 mg/50 mL</option>
             <option value="0.02">0,02 mg/mL — Adrénaline 1 mg/50 mL</option>
             <option value="5.0">5,0 mg/mL — Dobutamine 250 mg/50 mL</option>
@@ -1306,21 +1333,21 @@ body.urgence-mode #main::before {
       </div>
       <!-- Tableau de référence gamma courant -->
       <div>
-        <div style="font-size:11px;font-weight:700;color:var(--warn);margin-bottom:10px;">📋 TABLE RÉFÉRENCE — Noradrénaline 4 mg/50 mL (0,08 mg/mL)</div>
+        <div style="font-size:11px;font-weight:700;color:var(--warn);margin-bottom:10px;">📋 TABLE RÉFÉRENCE — Noradrénaline Classique (8 mg/48 mL = 167 µg/mL)</div>
         <table>
           <tr><th>µg/kg/min</th><th>Poids 60 kg</th><th>Poids 70 kg</th><th>Poids 80 kg</th><th>Poids 90 kg</th></tr>
-          <tr><td>0,05</td><td class="drug-dose">2,3 mL/h</td><td class="drug-dose">2,6 mL/h</td><td class="drug-dose">3,0 mL/h</td><td class="drug-dose">3,4 mL/h</td></tr>
-          <tr><td>0,10</td><td class="drug-dose">4,5 mL/h</td><td class="drug-dose">5,3 mL/h</td><td class="drug-dose">6,0 mL/h</td><td class="drug-dose">6,8 mL/h</td></tr>
-          <tr><td>0,15</td><td class="drug-dose">6,8 mL/h</td><td class="drug-dose">7,9 mL/h</td><td class="drug-dose">9,0 mL/h</td><td class="drug-dose">10,1 mL/h</td></tr>
-          <tr><td>0,20</td><td class="drug-dose">9,0 mL/h</td><td class="drug-dose">10,5 mL/h</td><td class="drug-dose">12,0 mL/h</td><td class="drug-dose">13,5 mL/h</td></tr>
-          <tr><td>0,30</td><td class="drug-dose">13,5 mL/h</td><td class="drug-dose">15,8 mL/h</td><td class="drug-dose">18,0 mL/h</td><td class="drug-dose">20,3 mL/h</td></tr>
-          <tr><td>0,50</td><td class="drug-dose">22,5 mL/h</td><td class="drug-dose">26,3 mL/h</td><td class="drug-dose">30,0 mL/h</td><td class="drug-dose">33,8 mL/h</td></tr>
-          <tr><td style="color:var(--danger);">1,00</td><td class="drug-dose" style="color:var(--danger);">45,0 mL/h</td><td class="drug-dose" style="color:var(--danger);">52,5 mL/h</td><td class="drug-dose" style="color:var(--danger);">60,0 mL/h</td><td class="drug-dose" style="color:var(--danger);">67,5 mL/h</td></tr>
+          <tr><td>0,05</td><td class="drug-dose">1,1 mL/h</td><td class="drug-dose">1,3 mL/h</td><td class="drug-dose">1,4 mL/h</td><td class="drug-dose">1,6 mL/h</td></tr>
+          <tr><td>0,10</td><td class="drug-dose">2,2 mL/h</td><td class="drug-dose">2,5 mL/h</td><td class="drug-dose">2,9 mL/h</td><td class="drug-dose">3,2 mL/h</td></tr>
+          <tr><td>0,15</td><td class="drug-dose">3,2 mL/h</td><td class="drug-dose">3,8 mL/h</td><td class="drug-dose">4,3 mL/h</td><td class="drug-dose">4,8 mL/h</td></tr>
+          <tr><td>0,20</td><td class="drug-dose">4,3 mL/h</td><td class="drug-dose">5,0 mL/h</td><td class="drug-dose">5,7 mL/h</td><td class="drug-dose">6,5 mL/h</td></tr>
+          <tr><td>0,30</td><td class="drug-dose">6,5 mL/h</td><td class="drug-dose">7,5 mL/h</td><td class="drug-dose">8,6 mL/h</td><td class="drug-dose">9,7 mL/h</td></tr>
+          <tr><td>0,50</td><td class="drug-dose" style="color:var(--warn);">10,8 mL/h</td><td class="drug-dose" style="color:var(--warn);">12,6 mL/h</td><td class="drug-dose" style="color:var(--warn);">14,4 mL/h</td><td class="drug-dose" style="color:var(--warn);">16,2 mL/h</td></tr>
+          <tr><td style="color:var(--danger);">1,00</td><td class="drug-dose" style="color:var(--danger);">21,6 mL/h</td><td class="drug-dose" style="color:var(--danger);">25,1 mL/h</td><td class="drug-dose" style="color:var(--danger);">28,7 mL/h</td><td class="drug-dose" style="color:var(--danger);">32,3 mL/h</td></tr>
         </table>
         <div class="drug-note" style="margin-top:8px;">Formule générale : Débit (mL/h) = γ (µg/kg/min) × Poids (kg) × 60 / Concentration (µg/mL)</div>
         <div style="margin-top:10px;padding:8px 12px;background:var(--navy-light);border-radius:6px;font-size:11px;">
           <strong>Autres concentrations standards :</strong><br>
-          Adrénaline 4 mg/50 mL : même table que norad<br>
+          Adrénaline 4 mg/50 mL = 80 µg/mL (table différente de la norad)<br>
           Dobutamine 250 mg/50 mL = 5 mg/mL = 5000 µg/mL<br>
           &nbsp;→ 5 µg/kg/min sur 70 kg = <strong>4,2 mL/h</strong><br>
           &nbsp;→ 10 µg/kg/min sur 70 kg = <strong>8,4 mL/h</strong>
@@ -1748,34 +1775,190 @@ body.urgence-mode #main::before {
 <!-- OBSTÉTRIQUE -->
 <div id="section-obstetrique" class="section">
   <div class="urgency-banner">🤰 <strong>Urgence obstétricale :</strong> Maternité HUS · Bloc obstétrical · Obstétricien de garde 24h/24</div>
-  <div class="grid2">
-    <div class="card"><div class="card-title">💉 Péridurale obstétricale</div>
-      <table><tr><th>Étape</th><th>Détail</th></tr>
-      <tr><td>Niveau</td><td>L2-L3 ou L3-L4 · Position assise ou DL</td></tr>
-      <tr><td>Test dose</td><td class="drug-dose editable" ondblclick="editField(this)">Lidocaïne 2% + Adrénaline 1:200 000 → 3 mL IV test</td></tr>
-      <tr><td>Dose initiale</td><td class="drug-dose editable" ondblclick="editField(this)">Ropi 0,1% + Sufentanil 0,5 µg/mL → 10–15 mL</td></tr>
-      <tr><td>Entretien PCEA</td><td class="drug-dose editable" ondblclick="editField(this)">Ropi 0,1% + Sufentanil 0,5 µg/mL · bolus 8 mL / lock 20 min</td></tr>
-      <tr><td>Débit basal</td><td class="drug-dose editable" ondblclick="editField(this)">5–8 mL/h</td></tr>
-      </table>
-      <div class="info-box" style="margin-top:10px;">HypoTA : Phényléphrine 50–100 µg IV · DL gauche · NaCl 250 mL</div>
-    </div>
-    <div class="card"><div class="card-title">🔪 Césarienne</div>
-      <div style="font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">RACHIANESTHÉSIE</div>
-      <table><tr><th>Agent</th><th>Dose</th></tr>
-      <tr><td>Bupivacaïne hyperbare 0,5%</td><td class="drug-dose editable" ondblclick="editField(this)">2–2,5 mL (10–12,5 mg)</td></tr>
-      <tr><td>Sufentanil intrathécal</td><td class="drug-dose editable" ondblclick="editField(this)">2,5–5 µg</td></tr>
-      <tr><td>Morphine intrathécale</td><td class="drug-dose editable" ondblclick="editField(this)">100 µg (0,1 mg)</td></tr>
-      </table>
-      <div class="info-box" style="margin-top:8px;">Phényléphrine IVSE 25–50 µg/min prophylactique dès rachianesthésie</div>
-      <div style="font-size:12px;font-weight:700;color:var(--text-dim);margin:12px 0 8px;">AG URGENCE EXTRÊME</div>
-      <div class="algo-step"><div class="step-num">1</div><div class="step-content"><strong>ISR modifiée · DL gauche 15°</strong><p>Préoxygénation · Sellick</p></div></div>
-      <div class="algo-step"><div class="step-num">2</div><div class="step-content"><strong>Étomidate + Succinylcholine</strong><p class="drug-dose editable" ondblclick="editField(this)">0,3 mg/kg + 1,5 mg/kg</p></div></div>
-      <div class="algo-step"><div class="step-num">3</div><div class="step-content"><strong>Ocytocine après extraction</strong><p class="drug-dose editable" ondblclick="editField(this)">3–5 UI IV lent + 20 UI IVSE/4h</p></div></div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+    <button class="btn" onclick="showObsTab('peri',this)">💉 Péridurale / Césarienne</button>
+    <button class="btn-ghost" onclick="showObsTab('hpp',this)">🩸 HPP</button>
+    <button class="btn-ghost" onclick="showObsTab('preeclampsie',this)">⚡ Pré-éclampsie</button>
+    <button class="btn-ghost" onclick="showObsTab('hellp',this)">🫀 HELLP</button>
+    <button class="btn-ghost" onclick="showObsTab('eclampsie',this)">🧠 Éclampsie</button>
+    <button class="btn-ghost" onclick="showObsTab('embolie-amn',this)">🫁 Embolie amniotique</button>
+  </div>
+
+  <!-- PÉRIDURALE / CÉSARIENNE -->
+  <div id="obs-peri" class="obs-panel">
+    <div class="grid2">
+      <div class="card"><div class="card-title">💉 Péridurale obstétricale</div>
+        <table><tr><th>Étape</th><th>Détail</th></tr>
+        <tr><td>Niveau</td><td>L2-L3 ou L3-L4 · Position assise ou DL</td></tr>
+        <tr><td>Dose initiale</td><td class="drug-dose editable" ondblclick="editField(this)">Ropi 0,1% + Sufentanil 0,5 µg/mL → 10–15 mL</td></tr>
+        <tr><td>Entretien PCEA</td><td class="drug-dose editable" ondblclick="editField(this)">Ropi 0,1% + Sufentanil 0,5 µg/mL · bolus 8 mL / lock 20 min</td></tr>
+        <tr><td>Débit basal</td><td class="drug-dose editable" ondblclick="editField(this)">5–8 mL/h</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">HypoTA : Phényléphrine 50–100 µg IV · DL gauche · NaCl 250 mL</div>
+        <div class="info-box" style="margin-top:8px;">Délais d'arrêt héparine avant pose : HNF prophylactique = 4h · HNF curative = 4h TCA normal · HBPM prophylactique = 12h · HBPM curative = 24h</div>
+      </div>
+      <div class="card"><div class="card-title">🔪 Césarienne</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">RACHIANESTHÉSIE</div>
+        <table><tr><th>Agent</th><th>Dose</th></tr>
+        <tr><td>Bupivacaïne hyperbare 0,5%</td><td class="drug-dose editable" ondblclick="editField(this)">2–2,5 mL (10–12,5 mg)</td></tr>
+        <tr><td>Sufentanil intrathécal</td><td class="drug-dose editable" ondblclick="editField(this)">2,5–5 µg</td></tr>
+        <tr><td>Morphine intrathécale</td><td class="drug-dose editable" ondblclick="editField(this)">100 µg (0,1 mg)</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:8px;">Phényléphrine IVSE 25–50 µg/min prophylactique dès rachianesthésie</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-dim);margin:12px 0 8px;">AG URGENCE EXTRÊME</div>
+        <div class="algo-step"><div class="step-num">1</div><div class="step-content"><strong>ISR modifiée · DL gauche 15°</strong><p>Préoxygénation · Sellick</p></div></div>
+        <div class="algo-step"><div class="step-num">2</div><div class="step-content"><strong>Étomidate + Succinylcholine</strong><p class="drug-dose editable" ondblclick="editField(this)">0,3 mg/kg + 1,5 mg/kg</p></div></div>
+        <div class="algo-step"><div class="step-num">3</div><div class="step-content"><strong>Ocytocine après extraction</strong><p class="drug-dose editable" ondblclick="editField(this)">3–5 UI IV lent + 20 UI IVSE/4h</p></div></div>
+      </div>
     </div>
   </div>
+
+  <!-- HPP -->
+  <div id="obs-hpp" class="obs-panel" style="display:none;">
+    <div class="urgency-banner" style="background:rgba(230,57,70,0.1);border-color:var(--danger);color:var(--danger);">🩸 HÉMORRAGIE DU POST-PARTUM · Pertes &gt; 500 mL (voie basse) ou &gt; 1000 mL (césarienne) · Cause n°1 de mortalité maternelle</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🩸 CAT — Protocole minute par étape</div>
+        <div class="algo-step danger"><div class="step-num">1</div><div class="step-content"><strong>Alerte — Appel équipe (obstétricien + anesthésiste + sage-femme)</strong><p>Massage utérin (globe) · 2 VVP 16-14G · Bilan : NFS, coag, fibrinogène, RAI · Sondage vésical (vessie vide)</p></div></div>
+        <div class="algo-step danger"><div class="step-num">2</div><div class="step-content"><strong>Ocytocine (Syntocinon®) — 1ère intention</strong><p class="drug-dose editable" ondblclick="editField(this)">5–10 UI IV lent puis 20–40 UI dans 500 mL sur 2h · Max 60 UI/24h · Vérifier vacuité utérine et vaginale (révision/délivrance)</p></div></div>
+        <div class="algo-step warn"><div class="step-num">3</div><div class="step-content"><strong>Acide Tranexamique — Systématique et précoce</strong><p class="drug-dose editable" ondblclick="editField(this)">1 g IV en 10 min · Répéter 1 g si persistance à 30 min · Dans les 3h du début de l'hémorragie (étude WOMAN)</p></div></div>
+        <div class="algo-step warn"><div class="step-num">4</div><div class="step-content"><strong>Si échec Ocytocine — Sulprostone (Nalador®)</strong><p class="drug-dose editable" ondblclick="editField(this)">500 µg dans 250 mL NaCl IVSE : débuter 100 mL/h puis adapter · Max 1500 µg/24h (3 ampoules) · CI : cardiopathie, asthme sévère, HTA non contrôlée</p></div></div>
+        <div class="algo-step danger"><div class="step-num">5</div><div class="step-content"><strong>Transfusion massive si nécessaire</strong><p class="drug-dose editable" ondblclick="editField(this)">Ratio CGR:PFC:CPA = 1:1:1 · Fibrinogène 3 g IV si Fg &lt;2 g/L (cible plus élevée qu'en réa standard) · ROTEM si disponible</p></div></div>
+        <div class="algo-step danger"><div class="step-num">6</div><div class="step-content"><strong>Gestes invasifs si échec médical (30–60 min)</strong><p>Ballonnet de Bakri (tamponnement intra-utérin) · Embolisation artérielle (radiologie interventionnelle) · Ligature artères utérines/hypogastriques · Hystérectomie d'hémostase en dernier recours</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔍 Étiologies — Règle des 4T</div>
+        <table>
+          <tr><th>4T</th><th>Cause</th><th>Fréquence</th></tr>
+          <tr><td><strong>Tonus</strong></td><td>Atonie utérine</td><td style="color:var(--danger);">~70% — la plus fréquente</td></tr>
+          <tr><td><strong>Trauma</strong></td><td>Déchirure cervicale/vaginale/périnéale · Rupture utérine</td><td>~20%</td></tr>
+          <tr><td><strong>Tissu</strong></td><td>Rétention placentaire · Placenta accreta</td><td>~10%</td></tr>
+          <tr><td><strong>Thrombine</strong></td><td>Coagulopathie (CIVD, pré-existante)</td><td>~1%</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;"><strong>Objectifs transfusionnels HPP :</strong> Hb &gt; 8 g/dL · Fibrinogène &gt; 2 g/L · Plaquettes &gt; 50 G/L · TP &gt; 50% · Ca²⁺ ionisé normal</div>
+        <div class="drug-note" style="margin-top:8px;">Facteurs de risque : Multiparité · Surdistension utérine (gémellaire, macrosomie) · Travail prolongé · Chorioamniotite · ATCD HPP · Pré-éclampsie</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÉ-ÉCLAMPSIE -->
+  <div id="obs-preeclampsie" class="obs-panel" style="display:none;">
+    <div class="urgency-banner" style="background:rgba(244,162,97,0.1);border-color:var(--warn);color:var(--warn);">⚡ PRÉ-ÉCLAMPSIE · PAS ≥140 ou PAD ≥90 + Protéinurie ≥0,3 g/24h après 20 SA</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">⚡ CAT — Pré-éclampsie sévère</div>
+        <div class="info-box" style="margin-bottom:10px;">Sévère si : PAS ≥160 ou PAD ≥110 · ou atteinte d'organe (HELLP, OAP, IRA, céphalées, troubles visuels, douleur épigastrique)</div>
+        <div class="algo-step danger"><div class="step-num">1</div><div class="step-content"><strong>Contrôle tensionnel — Objectif PAS 140–155 / PAD 90–105</strong><p class="drug-dose editable" ondblclick="editField(this)">Nicardipine IVSE 1–6 mg/h · ou Labetalol 20–80 mg IV bolus /10 min (max 300 mg) · ou Urapidil 25 mg IV puis 5–20 mg/h</p></div></div>
+        <div class="algo-step warn"><div class="step-num">2</div><div class="step-content"><strong>MgSO₄ — Prévention des convulsions</strong><p class="drug-dose editable" ondblclick="editField(this)">Charge : 4 g IV sur 20 min · Entretien : 1–2 g/h IVSE · Systématique si pré-éclampsie sévère · Surveiller ROT, FR, diurèse</p></div></div>
+        <div class="algo-step warn"><div class="step-num">3</div><div class="step-content"><strong>Restriction hydrique</strong><p class="drug-dose editable" ondblclick="editField(this)">Apports limités à 80–100 mL/h · Risque OAP majoré (perméabilité capillaire ↑, albumine ↓)</p></div></div>
+        <div class="algo-step"><div class="step-num">4</div><div class="step-content"><strong>Décision d'accouchement</strong><p>Terme ≥34 SA + sévère → Accouchement · Terme &lt;34 SA → Corticothérapie de maturation + surveillance rapprochée si stable · Aggravation → Extraction quel que soit le terme</p></div></div>
+        <div class="algo-step"><div class="step-num">5</div><div class="step-content"><strong>Surveillance biologique rapprochée</strong><p>NFS-plaquettes, transaminases, créatinine, protéinurie /12-24h · Bilan HELLP si douleur épigastrique ou nausées</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚨 Critères de sévérité &amp; signes d'alarme</div>
+        <table>
+          <tr><th>Critère</th><th>Seuil</th></tr>
+          <tr><td>PA sévère</td><td class="drug-dose">PAS ≥160 ou PAD ≥110 mmHg</td></tr>
+          <tr><td>Protéinurie massive</td><td class="drug-dose">&gt;3–5 g/24h (pas systématiquement sévère seule)</td></tr>
+          <tr><td>Oligurie</td><td class="drug-dose">&lt;500 mL/24h</td></tr>
+          <tr><td>Atteinte hépatique</td><td class="drug-dose">Douleur épigastrique · Transaminases ↑</td></tr>
+          <tr><td>Atteinte neuro</td><td class="drug-dose">Céphalées · Troubles visuels · ROT vifs</td></tr>
+          <tr><td>Thrombopénie</td><td class="drug-dose">PQ &lt;100 G/L</td></tr>
+          <tr><td>RCIU sévère / OAP</td><td>Signes de gravité fœtale ou maternelle</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">Anesthésie : Rachianesthésie possible si PQ &gt;75 G/L et pas de coagulopathie · Privilégier ALR si possible (évite les pics tensionnels de l'AG)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELLP -->
+  <div id="obs-hellp" class="obs-panel" style="display:none;">
+    <div class="urgency-banner" style="background:rgba(230,57,70,0.08);border-color:var(--danger);color:var(--danger);">🫀 SYNDROME HELLP · Hemolysis · Elevated Liver enzymes · Low Platelets · Variante sévère de pré-éclampsie</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🔬 Critères diagnostiques (Tennessee)</div>
+        <table>
+          <tr><th>Critère</th><th>Seuil</th></tr>
+          <tr><td><strong>H</strong> — Hémolyse</td><td class="drug-dose">LDH &gt;600 UI/L · Haptoglobine effondrée · Schizocytes</td></tr>
+          <tr><td><strong>EL</strong> — Cytolyse hépatique</td><td class="drug-dose">ASAT/ALAT &gt;70 UI/L (parfois &gt;1000)</td></tr>
+          <tr><td><strong>LP</strong> — Thrombopénie</td><td class="drug-dose">PQ &lt;100 G/L (classe 3 : 100–150 · classe 2 : 50–100 · classe 1 : &lt;50)</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;border-left-color:var(--danger);">Complications : Hématome sous-capsulaire hépatique (risque de rupture) · CIVD · IRA · Éclampsie associée · Décollement placentaire</div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚡ CAT HELLP</div>
+        <div class="algo-step danger"><div class="step-num">1</div><div class="step-content"><strong>Mêmes principes que pré-éclampsie sévère</strong><p>Contrôle tensionnel · MgSO₄ systématique · Surveillance rapprochée</p></div></div>
+        <div class="algo-step warn"><div class="step-num">2</div><div class="step-content"><strong>Accouchement — Traitement définitif</strong><p class="drug-dose editable" ondblclick="editField(this)">Extraction dans les 24–48h si stable · Immédiate si instabilité maternelle ou fœtale · Voie basse possible si col favorable, sinon césarienne</p></div></div>
+        <div class="algo-step warn"><div class="step-num">3</div><div class="step-content"><strong>Corriger la coagulopathie avant accouchement</strong><p class="drug-dose editable" ondblclick="editField(this)">Transfusion plaquettaire si PQ &lt;50 G/L et geste invasif prévu · PFC si TP &lt;50% · Fibrinogène si &lt;1,5 g/L</p></div></div>
+        <div class="algo-step"><div class="step-num">4</div><div class="step-content"><strong>Anesthésie selon plaquettes</strong><p class="drug-dose editable" ondblclick="editField(this)">PQ &gt;75 G/L sans coagulopathie → ALR possible · PQ &lt;75 G/L ou coagulopathie → AG</p></div></div>
+        <div class="algo-step danger"><div class="step-num">!</div><div class="step-content"><strong>Douleur épigastrique brutale + choc → Suspecter rupture hématome hépatique</strong><p>Scanner abdominal urgence · Chirurgie/embolisation si rupture confirmée</p></div></div>
+        <div class="drug-note" style="margin-top:8px;">Le HELLP peut apparaître ou s'aggraver en post-partum (jusqu'à 7j) — surveillance biologique à maintenir après l'accouchement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCLAMPSIE -->
+  <div id="obs-eclampsie" class="obs-panel" style="display:none;">
+    <div class="urgency-banner" style="background:rgba(230,57,70,0.1);border-color:var(--danger);color:var(--danger);">🧠 ÉCLAMPSIE · Convulsions tonico-cloniques généralisées chez la femme enceinte/post-partum · Urgence vitale materno-fœtale</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🧠 CAT immédiate — Protocole minute</div>
+        <div class="algo-step danger"><div class="step-num">1</div><div class="step-content"><strong>Sécuriser — Position latérale gauche</strong><p>Protéger des traumatismes · Libérer les voies aériennes · O₂ haute concentration · Aspiration prête</p></div></div>
+        <div class="algo-step danger"><div class="step-num">2</div><div class="step-content"><strong>MgSO₄ — Traitement de référence (PAS Benzodiazépine en 1ère intention)</strong><p class="drug-dose editable" ondblclick="editField(this)">Charge : 4 g IV sur 5–10 min · Entretien : 1–2 g/h IVSE · Si récidive : nouveau bolus 2 g IV</p></div></div>
+        <div class="algo-step warn"><div class="step-num">3</div><div class="step-content"><strong>Contrôle tensionnel</strong><p class="drug-dose editable" ondblclick="editField(this)">Nicardipine IVSE ou Labetalol IV · Objectif PAS &lt;160 / PAD &lt;110 · Éviter chute brutale (hypoperfusion utéroplacentaire)</p></div></div>
+        <div class="algo-step warn"><div class="step-num">4</div><div class="step-content"><strong>Surveillance toxicité MgSO₄</strong><p class="drug-dose editable" ondblclick="editField(this)">ROT (abolis = signe précoce) · FR (&gt;12/min) · Diurèse (&gt;25 mL/h) · Si toxicité : Gluconate Ca 1 g IV ANTIDOTE + arrêt MgSO₄</p></div></div>
+        <div class="algo-step danger"><div class="step-num">5</div><div class="step-content"><strong>Accouchement après stabilisation maternelle</strong><p>Ne pas précipiter l'extraction avant stabilisation · Rythme cardiaque fœtal après contrôle convulsions · Voie d'accouchement selon contexte obstétrical</p></div></div>
+        <div class="algo-step"><div class="step-num">6</div><div class="step-content"><strong>Si convulsions réfractaires au MgSO₄</strong><p class="drug-dose editable" ondblclick="editField(this)">Diazépam 10 mg IV ou Midazolam 2–5 mg IV · Scanner cérébral si déficit focal persistant ou doute diagnostique (PRES, AVC, hémorragie)</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚗️ Préparation MgSO₄ — Éclampsie</div>
+        <table>
+          <tr><th>Phase</th><th>Préparation</th><th>Dose</th></tr>
+          <tr><td>Charge</td><td class="drug-dose editable" ondblclick="editField(this)">4 g MgSO₄ 15% (27 mL) dans 100 mL G5% · sur 5–10 min (urgence)</td><td class="drug-dose">4 g</td></tr>
+          <tr><td>Entretien</td><td class="drug-dose editable" ondblclick="editField(this)">20 g dans 500 mL NaCl 0,9% = 40 mg/mL · 25–50 mL/h</td><td class="drug-dose">1–2 g/h</td></tr>
+          <tr><td>Récidive</td><td class="drug-dose editable" ondblclick="editField(this)">Bolus supplémentaire 2 g IV en 5 min</td><td class="drug-dose">2 g</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:10px;">
+          <strong>Cible Mg²⁺ thérapeutique :</strong> 2–3,5 mmol/L<br>
+          <strong>Toxicité :</strong> 4–5 mmol/L = aréflexie · 5–6,5 mmol/L = dépression respiratoire · &gt;7,5 mmol/L = arrêt cardiaque
+        </div>
+        <div class="drug-note" style="margin-top:8px;">Adapter posologie si IRC (clairance &lt;30 mL/min) · Surveillance renforcée ROT/FR/diurèse · Durée maintien : 24h post-accouchement ou post-dernière convulsion</div>
+        <div class="urgency-banner" style="background:rgba(230,57,70,0.07);margin-top:10px;color:var(--danger);">⚠️ Diagnostics différentiels à éliminer : AVC hémorragique, thrombose veineuse cérébrale, PRES syndrome, épilepsie préexistante</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBOLIE AMNIOTIQUE -->
+  <div id="obs-embolie-amn" class="obs-panel" style="display:none;">
+    <div class="urgency-banner" style="background:rgba(230,57,70,0.1);border-color:var(--danger);color:var(--danger);">🫁 EMBOLIE AMNIOTIQUE · Syndrome anaphylactoïde de la grossesse · Mortalité maternelle 20–60% · Diagnostic clinique d'exclusion</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🔍 Présentation clinique typique</div>
+        <div class="info-box" style="margin-bottom:10px;">Survient typiquement pendant le travail, l'accouchement ou dans les 30 min post-partum. Triade classique : hypoxie + hypotension/collapsus + coagulopathie</div>
+        <table>
+          <tr><th>Phase</th><th>Signes</th></tr>
+          <tr><td><strong>Phase 1</strong><br>Cardio-respiratoire</td><td>Détresse respiratoire brutale · Hypoxémie sévère · Hypotension/collapsus · Cyanose · Arrêt cardiaque possible d'emblée</td></tr>
+          <tr><td><strong>Phase 2</strong><br>Hémorragique</td><td>CIVD massive (dans les 30 min à plusieurs heures) · Atonie utérine · Hémorragie incontrôlable</td></tr>
+          <tr><td>Signes associés</td><td>Convulsions · Agitation/confusion · Frissons · Toux · Anxiété brutale</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">🚨 CAT — Réanimation immédiate</div>
+        <div class="algo-step danger"><div class="step-num">1</div><div class="step-content"><strong>Appel à l'aide + RCP si ACR</strong><p>Équipe complète : obstétricien, anesthésiste, réanimateur, sage-femme · MCE standard + DUG si ≥20 SA · Césarienne péri-mortelle si ACR &gt;4 min</p></div></div>
+        <div class="algo-step danger"><div class="step-num">2</div><div class="step-content"><strong>Oxygénation et soutien hémodynamique</strong><p class="drug-dose editable" ondblclick="editField(this)">FiO₂ 100% · IOT précoce si détresse respiratoire · Noradrénaline 0,1–1 µg/kg/min IVSE · Remplissage prudent (risque OAP)</p></div></div>
+        <div class="algo-step warn"><div class="step-num">3</div><div class="step-content"><strong>Correction de la coagulopathie (CIVD)</strong><p class="drug-dose editable" ondblclick="editField(this)">PFC précoce et massif · Fibrinogène 3–4 g IV · CPA si PQ &lt;50 G/L · ROTEM/TEG pour guider · Acide tranexamique 1 g IV</p></div></div>
+        <div class="algo-step warn"><div class="step-num">4</div><div class="step-content"><strong>Soutien ventriculaire droit (défaillance fréquente)</strong><p class="drug-dose editable" ondblclick="editField(this)">Dobutamine si bas débit · NO inhalé si HTAP aiguë · ECMO VA à discuter précocement si réfractaire (centre expert)</p></div></div>
+        <div class="algo-step"><div class="step-num">5</div><div class="step-content"><strong>Extraction fœtale rapide</strong><p>Si pré-partum : césarienne en urgence dès stabilisation initiale ou en parallèle de la réanimation maternelle (bénéfice maternel ET fœtal)</p></div></div>
+        <div class="drug-note" style="margin-top:8px;">Diagnostic d'exclusion : éliminer EP, choc anaphylactique, choc hémorragique, choc septique, cardiomyopathie du péripartum. Pas de test diagnostique spécifique fiable.</div>
+      </div>
+    </div>
+  </div>
+
 </div>
-    <!-- ══════════════ RÉA — CAT ══════════════ -->
-    <div id="section-rea-cat" class="section">
+
+
+<div id="section-rea-cat" class="section">
       <div class="urgency-banner">🫀 <strong>Conduites à tenir en Réanimation</strong> — Double-clic sur les doses pour les modifier</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
         <button class="btn" onclick="showReaTab('fa',this)">🔴 FA ± tolérée</button>
@@ -6054,7 +6237,7 @@ id="nutrition-inner">
     <button class="btn-ghost" onclick="showBioTab('phos',this)">⚗️ Phosphore</button>
     <button class="btn-ghost" onclick="showBioTab('valeurs',this)">📋 Valeurs normales</button>
   </div>
-  <div id="bio-na" class="bio-panel">
+  <div id="bio-panel-na" class="bio-panel">
     <div class="grid2">
       <div class="card">
         <div class="card-title">🧂 Hyponatrémie (&lt;136 mmol/L)</div>
@@ -6893,6 +7076,70 @@ id="nutrition-inner">
       </table>
     </div>
   </div>
+
+
+<!-- CHECKLISTS -->
+  <div class="card" style="margin-top:14px;" id="annexe-checklists">
+    <div class="card-title">✅ Checklists pratiques</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="btn" onclick="showAnnexeTab('opioides',this)">💊 Équivalences opioïdes</button>
+      <button class="btn-ghost" onclick="showAnnexeTab('checklist-intubation',this)">🫁 Checklist Intubation</button>
+      <button class="btn-ghost" onclick="showAnnexeTab('checklist-salle',this)">🏥 Checklist Salle</button>
+      <button class="btn-ghost" onclick="showAnnexeTab('cortico',this)">💉 Corticoïdes</button>
+      <button class="btn-ghost" onclick="showAnnexeTab('compat',this)">🔬 Compatibilités IV</button>
+      <button class="btn-ghost" onclick="showAnnexeTab('abx-irc',this)">🦠 ABX + IRC</button>
+      <button class="btn-ghost" onclick="showAnnexeTab('grossesse',this)">🤰 Grossesse &amp; Méd.</button>
+    </div>
+    <div id="ann-checklist-intubation" class="ann-panel" style="display:none;">
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;">🫁 CHECKLIST INTUBATION — SFAR</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">À compléter AVANT toute induction</div>
+          <table>
+            <tr><th>Étape</th><th>Vérification</th></tr>
+            <tr><td><strong>PATIENT</strong></td><td>Identité · Consentement · Jeûne · Allergie · Médecin présent</td></tr>
+            <tr><td><strong>VOIES AÉRIENNES</strong></td><td>Score Mallampati · Bouche ≥ 3 cm · Cou mobile · Barbichette</td></tr>
+            <tr><td><strong>VAD ?</strong></td><td>Si oui → Plan A/B/C écrit · IOT vigile si IIIB/IV · Renfort disponible</td></tr>
+            <tr><td><strong>MONITORING</strong></td><td>SpO₂ · ECG · PA · Capnographie branchée · BIS si TIVA</td></tr>
+            <tr><td><strong>VVP / VVC</strong></td><td>≥ 1 VVP fonctionnelle · Reflux vérifié · Extension disponible</td></tr>
+            <tr><td><strong>MÉDICAMENTS</strong></td><td>Hypnotique prêt · Curare prêt · Adrénaline 1 mg seringue · Atropine</td></tr>
+            <tr><td><strong>MATÉRIEL IOT</strong></td><td>Laryngoscope testé · Sonde adaptée + 1 taille inf. · Mandrin · Fixation</td></tr>
+            <tr><td><strong>ASPIRATION</strong></td><td>Yankauer branché et testé · 2e aspiration disponible</td></tr>
+            <tr><td><strong>VENTILATEUR</strong></td><td>Testé · Réglages initiaux saisis · Alarmes actives</td></tr>
+            <tr><td><strong>AIDE DISPONIBLE</strong></td><td>IADE/infirmier dédié · Chirurgien joignable (si ISR)</td></tr>
+            <tr><td><strong>PRÉOXYGÉNATION</strong></td><td>3 min FiO₂ 100% · EtO₂ &gt; 90% cible · Proclive si obèse</td></tr>
+            <tr><td><strong>APRÈS IOT</strong></td><td>Auscultation bilatérale · EtCO₂ confirmé · Fixation sonde · Rx si doute</td></tr>
+          </table>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:8px;">🏥 CHECKLIST SALLE D'OPÉRATION — OMS adaptée</div>
+          <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px;">⬛ TIME OUT (avant incision)</div>
+          <table>
+            <tr><td>Identité patient vérifiée par tout le monde</td><td>✓</td></tr>
+            <tr><td>Site opératoire marqué et confirmé</td><td>✓</td></tr>
+            <tr><td>Type d'intervention confirmé</td><td>✓</td></tr>
+            <tr><td>Allergie vérifiée à voix haute</td><td>✓</td></tr>
+            <tr><td>Voie aérienne et risque aspiration évalués</td><td>✓</td></tr>
+            <tr><td>Risque hémorragique connu · PSL commandés ?</td><td>✓</td></tr>
+            <tr><td>Antibioprophylaxie donnée dans les 60 min</td><td>✓</td></tr>
+            <tr><td>Imagerie affichée si nécessaire</td><td>✓</td></tr>
+          </table>
+          <div style="font-size:11px;font-weight:700;color:var(--warn);margin-top:10px;margin-bottom:6px;">⬛ SIGN OUT (avant fermeture/sortie)</div>
+          <table>
+            <tr><td>Nom et type de procédure réalisée confirmés</td><td>✓</td></tr>
+            <tr><td>Comptage compresses + instruments OK</td><td>✓</td></tr>
+            <tr><td>Pièces opératoires étiquetées</td><td>✓</td></tr>
+            <tr><td>Problèmes équipement à signaler ?</td><td>✓</td></tr>
+            <tr><td>Consignes post-op transmises</td><td>✓</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="ann-checklist-salle" class="ann-panel" style="display:none;">
+      <div class="info-box">Voir onglet "Checklist Intubation" pour la checklist salle complète (Time Out / Sign Out).</div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ANAPHYLAXIE -->
@@ -7870,67 +8117,7 @@ id="nutrition-inner">
     </div>
   </div>
 
-  <!-- CHECKLISTS -->
-  <div class="card" style="margin-top:14px;" id="annexe-checklists">
-    <div class="card-title">✅ Checklists pratiques</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-      <button class="btn" onclick="showAnnexeTab('opioides',this)">💊 Équivalences opioïdes</button>
-      <button class="btn-ghost" onclick="showAnnexeTab('checklist-intubation',this)">🫁 Checklist Intubation</button>
-      <button class="btn-ghost" onclick="showAnnexeTab('checklist-salle',this)">🏥 Checklist Salle</button>
-      <button class="btn-ghost" onclick="showAnnexeTab('cortico',this)">💉 Corticoïdes</button>
-      <button class="btn-ghost" onclick="showAnnexeTab('compat',this)">🔬 Compatibilités IV</button>
-      <button class="btn-ghost" onclick="showAnnexeTab('abx-irc',this)">🦠 ABX + IRC</button>
-      <button class="btn-ghost" onclick="showAnnexeTab('grossesse',this)">🤰 Grossesse &amp; Méd.</button>
-    </div>
-    <div id="ann-checklist-intubation" class="ann-panel" style="display:none;">
-      <div class="grid2">
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;">🫁 CHECKLIST INTUBATION — SFAR</div>
-          <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">À compléter AVANT toute induction</div>
-          <table>
-            <tr><th>Étape</th><th>Vérification</th></tr>
-            <tr><td><strong>PATIENT</strong></td><td>Identité · Consentement · Jeûne · Allergie · Médecin présent</td></tr>
-            <tr><td><strong>VOIES AÉRIENNES</strong></td><td>Score Mallampati · Bouche ≥ 3 cm · Cou mobile · Barbichette</td></tr>
-            <tr><td><strong>VAD ?</strong></td><td>Si oui → Plan A/B/C écrit · IOT vigile si IIIB/IV · Renfort disponible</td></tr>
-            <tr><td><strong>MONITORING</strong></td><td>SpO₂ · ECG · PA · Capnographie branchée · BIS si TIVA</td></tr>
-            <tr><td><strong>VVP / VVC</strong></td><td>≥ 1 VVP fonctionnelle · Reflux vérifié · Extension disponible</td></tr>
-            <tr><td><strong>MÉDICAMENTS</strong></td><td>Hypnotique prêt · Curare prêt · Adrénaline 1 mg seringue · Atropine</td></tr>
-            <tr><td><strong>MATÉRIEL IOT</strong></td><td>Laryngoscope testé · Sonde adaptée + 1 taille inf. · Mandrin · Fixation</td></tr>
-            <tr><td><strong>ASPIRATION</strong></td><td>Yankauer branché et testé · 2e aspiration disponible</td></tr>
-            <tr><td><strong>VENTILATEUR</strong></td><td>Testé · Réglages initiaux saisis · Alarmes actives</td></tr>
-            <tr><td><strong>AIDE DISPONIBLE</strong></td><td>IADE/infirmier dédié · Chirurgien joignable (si ISR)</td></tr>
-            <tr><td><strong>PRÉOXYGÉNATION</strong></td><td>3 min FiO₂ 100% · EtO₂ &gt; 90% cible · Proclive si obèse</td></tr>
-            <tr><td><strong>APRÈS IOT</strong></td><td>Auscultation bilatérale · EtCO₂ confirmé · Fixation sonde · Rx si doute</td></tr>
-          </table>
-        </div>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:8px;">🏥 CHECKLIST SALLE D'OPÉRATION — OMS adaptée</div>
-          <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px;">⬛ TIME OUT (avant incision)</div>
-          <table>
-            <tr><td>Identité patient vérifiée par tout le monde</td><td>✓</td></tr>
-            <tr><td>Site opératoire marqué et confirmé</td><td>✓</td></tr>
-            <tr><td>Type d'intervention confirmé</td><td>✓</td></tr>
-            <tr><td>Allergie vérifiée à voix haute</td><td>✓</td></tr>
-            <tr><td>Voie aérienne et risque aspiration évalués</td><td>✓</td></tr>
-            <tr><td>Risque hémorragique connu · PSL commandés ?</td><td>✓</td></tr>
-            <tr><td>Antibioprophylaxie donnée dans les 60 min</td><td>✓</td></tr>
-            <tr><td>Imagerie affichée si nécessaire</td><td>✓</td></tr>
-          </table>
-          <div style="font-size:11px;font-weight:700;color:var(--warn);margin-top:10px;margin-bottom:6px;">⬛ SIGN OUT (avant fermeture/sortie)</div>
-          <table>
-            <tr><td>Nom et type de procédure réalisée confirmés</td><td>✓</td></tr>
-            <tr><td>Comptage compresses + instruments OK</td><td>✓</td></tr>
-            <tr><td>Pièces opératoires étiquetées</td><td>✓</td></tr>
-            <tr><td>Problèmes équipement à signaler ?</td><td>✓</td></tr>
-            <tr><td>Consignes post-op transmises</td><td>✓</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div id="ann-checklist-salle" class="ann-panel" style="display:none;">
-      <div class="info-box">Voir onglet "Checklist Intubation" pour la checklist salle complète (Time Out / Sign Out).</div>
-    </div>
-  </div>
+  
 
 </div>
 
@@ -9205,25 +9392,38 @@ function restoreIAAnalysis(idx) {
       <div class="card">
         <div class="card-title">💉 Noradrénaline (Norepinephrine)</div>
         <table>
-          <tr><th>Concentration</th><th>Préparation</th><th>Contenu</th></tr>
-          <tr><td><strong>Standard</strong><br><span class="drug-dose">0,08 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">4 mg (2 amp 2 mg) + NaCl 0,9% qsp 50 mL</td><td>4 mg / 50 mL = 80 µg/mL</td></tr>
-          <tr><td><strong>Concentrée ×2</strong><br><span class="drug-dose">0,16 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">8 mg (4 amp) + NaCl 0,9% qsp 50 mL</td><td>8 mg / 50 mL = 160 µg/mL</td></tr>
-          <tr><td><strong>Concentrée ×4</strong><br><span class="drug-dose">0,32 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">16 mg (8 amp) + NaCl 0,9% qsp 50 mL</td><td>16 mg / 50 mL = 320 µg/mL</td></tr>
+          <tr><th>Concentration</th><th>Préparation (seringue 50 mL)</th><th>µg/mL</th></tr>
+          <tr><td><strong>Baby</strong><br><span class="drug-dose">0,016 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">0,8 mg (0,4 mL amp 2 mg/mL) + NaCl 0,9% qsp 50 mL</td><td>16 µg/mL · Nouveau-né / Pédiatrie</td></tr>
+          <tr><td><strong>Classique</strong><br><span class="drug-dose">0,167 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">8 mg (4 amp 2 mg) + NaCl 0,9% qsp 48 mL</td><td>167 µg/mL · Standard adulte</td></tr>
+          <tr><td><strong>×2</strong><br><span class="drug-dose">0,333 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">16 mg (8 amp) + NaCl 0,9% qsp 48 mL</td><td>333 µg/mL · Choc réfractaire</td></tr>
+          <tr><td><strong>×4</strong><br><span class="drug-dose">0,667 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">32 mg (16 amp) + NaCl 0,9% qsp 48 mL</td><td>667 µg/mL · Choc vasoplégique sévère</td></tr>
+          <tr><td><strong>×6</strong><br><span class="drug-dose">1,0 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">48 mg (24 amp) + NaCl 0,9% qsp 48 mL</td><td>1000 µg/mL · Restriction volémique</td></tr>
+          <tr><td><strong>×12</strong><br><span class="drug-dose">2,0 mg/mL</span></td><td class="drug-dose editable" ondblclick="editField(this)">96 mg (48 amp) + NaCl 0,9% qsp 48 mL</td><td>2000 µg/mL · Restriction extrême</td></tr>
         </table>
         <div style="margin-top:10px;">
-          <div style="font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">ÉQUIVALENCES γ ↔ mL/h (patient 70 kg · concentration standard 80 µg/mL)</div>
-          <table>
-            <tr><th>Dose (µg/kg/min)</th><th>Dose (µg/min)</th><th>Débit mL/h</th></tr>
-            <tr><td>0,05 γ</td><td>3,5 µg/min</td><td class="drug-dose">2,6 mL/h</td></tr>
-            <tr><td>0,1 γ</td><td>7 µg/min</td><td class="drug-dose">5,3 mL/h</td></tr>
-            <tr><td>0,2 γ</td><td>14 µg/min</td><td class="drug-dose">10,5 mL/h</td></tr>
-            <tr><td>0,3 γ</td><td>21 µg/min</td><td class="drug-dose">15,8 mL/h</td></tr>
-            <tr><td>0,5 γ</td><td>35 µg/min</td><td class="drug-dose">26,3 mL/h</td></tr>
-            <tr><td>1,0 γ</td><td>70 µg/min</td><td class="drug-dose" style="color:var(--danger)">52,5 mL/h ⚠️</td></tr>
+          <div style="font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">ÉQUIVALENCES γ ↔ mL/h selon concentration (patient 70 kg)</div>
+          <div style="overflow-x:auto;">
+          <table style="font-size:11px;">
+            <tr>
+              <th>Dose (µg/kg/min)</th>
+              <th>Baby<br>16 µg/mL</th>
+              <th>Classique<br>167 µg/mL</th>
+              <th>×2<br>333 µg/mL</th>
+              <th>×4<br>667 µg/mL</th>
+              <th>×6<br>1000 µg/mL</th>
+              <th>×12<br>2000 µg/mL</th>
+            </tr>
+            <tr><td>0,05 γ</td><td>131 mL/h</td><td class="drug-dose">12,6 mL/h</td><td>6,3 mL/h</td><td>3,2 mL/h</td><td>2,1 mL/h</td><td>1,1 mL/h</td></tr>
+            <tr><td>0,1 γ</td><td>263 mL/h</td><td class="drug-dose">25,1 mL/h</td><td>12,6 mL/h</td><td>6,3 mL/h</td><td>4,2 mL/h</td><td>2,1 mL/h</td></tr>
+            <tr><td>0,2 γ</td><td>—</td><td class="drug-dose">50,3 mL/h</td><td>25,1 mL/h</td><td>12,6 mL/h</td><td>8,4 mL/h</td><td>4,2 mL/h</td></tr>
+            <tr><td>0,3 γ</td><td>—</td><td class="drug-dose" style="color:var(--warn)">75,4 mL/h</td><td>37,7 mL/h</td><td>18,9 mL/h</td><td>12,6 mL/h</td><td>6,3 mL/h</td></tr>
+            <tr><td>0,5 γ</td><td>—</td><td class="drug-dose" style="color:var(--danger)">125,6 mL/h ⚠️</td><td>62,8 mL/h</td><td>31,4 mL/h</td><td>21,0 mL/h</td><td>10,5 mL/h</td></tr>
+            <tr><td>1,0 γ</td><td>—</td><td>—</td><td class="drug-dose" style="color:var(--danger)">125,6 mL/h ⚠️</td><td>62,8 mL/h</td><td>42,0 mL/h</td><td>21,0 mL/h</td></tr>
           </table>
-          <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">Formule : Débit (mL/h) = γ × Poids × 60 / Concentration (µg/mL)</div>
+          </div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">Formule : Débit (mL/h) = γ × Poids × 60 / Concentration (µg/mL) · Baby = pédiatrie uniquement</div>
         </div>
-        <div class="drug-note" style="margin-top:8px;">Dilution : NaCl 0,9% ou G5% · Voie centrale obligatoire · Stabilité 24h · Protégé lumière · Relais en Y</div>
+        <div class="drug-note" style="margin-top:8px;">VVC OBLIGATOIRE · Dilution NaCl 0,9% · Stabilité 24h · Protéger de la lumière · Relais en Y sans coupure</div></div>
       </div>
       <div class="card">
         <div class="card-title">💉 Adrénaline (Epinephrine)</div>
@@ -10185,7 +10385,8 @@ function showTransfTab(tab, btn) {
 // ── BIOLOGIE TABS
 function showBioTab(tab, btn) {
   document.querySelectorAll('.bio-panel').forEach(p => p.style.display = 'none');
-  const panel = document.getElementById('bio-' + tab);
+  var panelId = tab === 'na' ? 'bio-panel-na' : ('bio-' + tab);
+  const panel = document.getElementById(panelId);
   if (panel) panel.style.display = 'block';
   document.querySelectorAll('#section-biologie > div[style*="flex"] .btn, #section-biologie > div[style*="flex"] .btn-ghost').forEach(b => b.className = 'btn-ghost');
   if (btn) btn.className = 'btn';
@@ -10689,7 +10890,7 @@ function initAllPanels() {
     { cls: 'rean-panel',         firstId: 'rean-sepsis' },
     { cls: 'vent-panel',         firstId: 'vent-reglages' },
     { cls: 'intox-panel',        firstId: 'intox-paracetamol' },
-    { cls: 'bio-panel',          firstId: 'bio-na' },
+    { cls: 'bio-panel',          firstId: 'bio-panel-na' },
     { cls: 'alr-panel',          firstId: 'alr-ms' },
     { cls: 'ped-panel',          firstId: 'ped-doses' },
     { cls: 'ann-panel',          firstId: 'ann-opioides' },
@@ -10701,6 +10902,8 @@ function initAllPanels() {
     { cls: 'hemo-panel',          firstId: 'hemo2-types' },
     { cls: 'prep-panel',          firstId: 'prep-vasopresseurs' },
     { cls: 'proto-panel',         firstId: 'proto-hyperK' },
+    { cls: 'ett-panel',           firstId: 'ett-preparation' },
+    { cls: 'obs-panel',           firstId: 'obs-peri' },
   ];
   groups.forEach(function(g) {
     var el = document.getElementById(g.firstId);
@@ -11273,4 +11476,28 @@ function calcDeltaRatio() {
   }
 }
 
+
+// ── ETT TABS
+function showEttTab(tab, btn) {
+  document.querySelectorAll('.ett-panel').forEach(function(p){ p.style.display='none'; });
+  var el = document.getElementById('ett-'+tab);
+  if(el) el.style.display = 'block';
+  var ctr = document.getElementById('section-ett');
+  if(ctr) ctr.querySelectorAll('div[style*="flex"] .btn, div[style*="flex"] .btn-ghost').forEach(function(b){
+    if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('showEttTab') >= 0) b.className = 'btn-ghost';
+  });
+  if(btn) btn.className = 'btn';
+}
+
+// ── OBSTÉTRIQUE TABS
+function showObsTab(tab, btn) {
+  document.querySelectorAll('.obs-panel').forEach(function(p){ p.style.display='none'; });
+  var el = document.getElementById('obs-'+tab);
+  if(el) el.style.display = 'block';
+  var ctr = document.getElementById('section-obstetrique');
+  if(ctr) ctr.querySelectorAll('div[style*="flex"] .btn, div[style*="flex"] .btn-ghost').forEach(function(b){
+    if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('showObsTab') >= 0) b.className = 'btn-ghost';
+  });
+  if(btn) btn.className = 'btn';
+}
 </script>
